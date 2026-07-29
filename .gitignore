@@ -1,10 +1,13 @@
-# Terraform working directory
+# Terraform working directory (providers, plugins, etc.)
 .terraform/
 .terraform/*
 
 # Terraform state files
 *.tfstate
 *.tfstate.*
+
+# Terraform lock file (can cause merge conflicts and bloat)
+.terraform.lock.hcl
 
 # Crash logs
 crash.log
@@ -20,10 +23,7 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
-# Terraform lock file
-.terraform.lock.hcl
-
-# Terraform plan files
+# Terraform plan files (can be huge)
 *.tfplan
 planout
 
