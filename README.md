@@ -61,7 +61,7 @@ terraform/
 │   ├── ansible.cfg  
 │   ├── requirements.yml
 │   ├── inventories/
-│   │    ├── hosts.yml	
+│   │ ├── hosts.yml	
 │   │	├── group_vars/
 │   │	│	├── all.yml
 │   │	│	├── public_hosts.yml 
