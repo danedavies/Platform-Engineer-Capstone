@@ -1,0 +1,24 @@
+plugins: amazon.aws.aws_ec2
+regions:
+  - us-east-1
+
+# Filter to only instances belonging to this project (set by Terraform dafault_tags)
+
+filters:
+  tag:Project: capstone
+  instance-state-name: running
+
+# Group hosts by their Role tag - playbooks target tag_Role_bastion,
+# tag_Role_private_app, tag_Role_router instead of hardcoded IPs
+
+keyed_groups:
+  - key: ec2_tags.Role
+    prefic: tag_Role
+    seperator: "_"
+
+# Public IP for Bastion and router (publically reachable);
+# private IP as fallback for instances with no public IP.
+
+hoastnames:
+  - ip-address
+  - private-ip-address
