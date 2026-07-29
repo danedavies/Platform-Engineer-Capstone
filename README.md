@@ -25,11 +25,38 @@ The project demonstrates how network operations can adopt the same declarative, 
 🏗️ **Repository Structure**
 
 ```
-├── terraform/
-│   ├── modules/
-│   ├── environments/
-│   └── backend-config/
+terraform/
 │
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── providers.tf
+│
+├── vpc_app/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│
+├── vpc_obs/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│
+├── vpc_router/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│
+├── peering/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│
+└── ec2/
+    ├── main.tf
+    ├── variables.tf
+    ├── outputs.tf
+
 ├── ansible/
 │   ├── ansible.cfg  
 │   ├── requirements.yml
