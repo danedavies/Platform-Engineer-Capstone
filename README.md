@@ -119,13 +119,13 @@ terraform/
 
 This project provisions and manages cloud networking resources such as:
 
-- VPCs / VNets  
+- VPCs
 - Subnets  
 - Route tables  
-- Security groups / NSGs  
-- Peering / VPN endpoints  
+- Security groups 
+- Peering
 
-All Terraform state is stored remotely to support collaboration and CI/CD automation.
+This project uses a remote Terraform backend to store state. Remote state enables safe collaboration, automatic state locking, and seamless CI/CD execution.
 
 ---
 
@@ -152,7 +152,7 @@ The pipeline includes:
 ### 2. Dry-Run Stage
 - Terraform plan posted back to PR  
 - Ansible check mode  
-- Diff artifacts for reviewer visibility  
+- Diff artifacts for reviewer visibility
 
 ### 3. Deploy Stage
 - Terraform apply  
