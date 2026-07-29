@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ########################################
 # VPC 1 – APP
 ########################################
@@ -66,40 +65,13 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_eip" "nat_eip" {
   domain = "vpc"
-=======
-resource "aws_vpc" "app" {
-  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name = "${var.project_name}-app-nat-eip"
+  }
 }
-
-resource "aws_subnet" "public" {
-  cidr_block              = "10.0.1.0/24"
-  vpc_id                  = aws_vpc.app.id
-  map_public_ip_on_launch = true
-}
-
-resource "aws_subnet" "private_1" {
-  cidr_block = "10.0.2.0/24"
-  vpc_id     = aws_vpc.app.id
-}
-
-resource "aws_subnet" "private_2" {
-  cidr_block = "10.0.3.0/24"
-  vpc_id     = aws_vpc.app.id
-}
-
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.app.id
-}
-
-resource "aws_eip" "nat_eip" {
-  vpc = true
->>>>>>> 6b0e8065f2843ecac089ddc6f14f97a8ed5557ef
-}
-
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public.id
-<<<<<<< HEAD
 
   tags = {
     Name = "${var.project_name}-app-nat"
@@ -109,11 +81,6 @@ resource "aws_nat_gateway" "nat" {
 ########################################
 # Route Tables
 ########################################
-
-=======
-}
-
->>>>>>> 6b0e8065f2843ecac089ddc6f14f97a8ed5557ef
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.app.id
 
@@ -121,7 +88,6 @@ resource "aws_route_table" "public_rt" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
-<<<<<<< HEAD
 
   tags = {
     Name = "${var.project_name}-app-public-rt"
@@ -131,8 +97,6 @@ resource "aws_route_table" "public_rt" {
 resource "aws_route_table_association" "public_assoc" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public_rt.id
-=======
->>>>>>> 6b0e8065f2843ecac089ddc6f14f97a8ed5557ef
 }
 
 resource "aws_route_table" "private_rt" {
@@ -142,7 +106,6 @@ resource "aws_route_table" "private_rt" {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat.id
   }
-<<<<<<< HEAD
 
   tags = {
     Name = "${var.project_name}-app-private-rt"
@@ -157,6 +120,4 @@ resource "aws_route_table_association" "private_1_assoc" {
 resource "aws_route_table_association" "private_2_assoc" {
   subnet_id      = aws_subnet.private_2.id
   route_table_id = aws_route_table.private_rt.id
-=======
->>>>>>> 6b0e8065f2843ecac089ddc6f14f97a8ed5557ef
 }

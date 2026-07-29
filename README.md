@@ -25,6 +25,12 @@ The project demonstrates how network operations can adopt the same declarative, 
 🏗️ **Repository Structure**
 
 ```
+Platform-Engineer-Capstone/
+|
+.github
+|
+├── workflows/
+|
 terraform/
 │
 ├── main.tf
