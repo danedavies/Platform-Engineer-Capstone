@@ -1,5 +1,5 @@
 ########################################
-# VPC 3 – Router
+# VPC 3 – ROUTER
 ########################################
 
 resource "aws_vpc" "router" {
@@ -17,8 +17,9 @@ resource "aws_vpc" "router" {
 ########################################
 
 resource "aws_subnet" "public" {
-  vpc_id                  = aws_vpc.router.id
   cidr_block              = var.public_subnet_cidr
+  vpc_id                  = aws_vpc.router.id
+  availability_zone       = "us-east-1c"
   map_public_ip_on_launch = true
 
   tags = {
