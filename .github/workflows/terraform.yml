@@ -3,8 +3,10 @@ name: Terraform
 on:
   pull_request:
     branches: [main]
+
   push:
     branches: [main]
+
   workflow_dispatch:
     inputs:
       action:
@@ -26,7 +28,7 @@ permissions:
 
 jobs:
   plan:
-    if: github.event_name == 'pull_request' || github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply'
+    if: github.event_name == 'pull_request' || github.event.inputs.action == 'plan'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -34,9 +36,9 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform
+
     steps:
       - uses: actions/checkout@v4
-      
       - uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials
@@ -62,13 +64,28 @@ jobs:
       - name: Terraform Lint
         run: tflint --no-color
 
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan -input=false
+      - name: Terraform Plan (dry-run)
+        run: terraform plan -no-color > tfplan.txt
+
+      - name: Comment PR with plan diff
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const plan = fs.readFileSync('tfplan.txt', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### Terraform Plan Diff\n\`\`\`\n${plan}\n\`\`\``
+            });
 
       - uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: tfplan
+          path: tfplan.txt
 
   apply:
     if: >
@@ -81,6 +98,7 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform
+
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
@@ -100,7 +118,7 @@ jobs:
           name: tfplan
 
       - name: Terraform Apply
-        run: terraform apply -input=false tfplan
+        run: terraform apply -input=false tfplan.txt
 
   destroy:
     if: github.event.inputs.action == 'destroy'
@@ -110,6 +128,7 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform
+
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
