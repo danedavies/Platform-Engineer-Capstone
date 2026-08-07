@@ -25,9 +25,11 @@ jobs:
     permissions:
       id-token: write
       pull-requests: write
+    defaults:
+      run:
+        working-directory: ./terraform
     steps:
       - uses: actions/checkout@v4
-
       - uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials
@@ -69,9 +71,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+    defaults:
+      run:
+        working-directory: ./terraform
     steps:
       - uses: actions/checkout@v4
-
       - uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials
@@ -96,9 +100,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+    defaults:
+      run:
+        working-directory: ./terraform
     steps:
       - uses: actions/checkout@v4
-
       - uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials
