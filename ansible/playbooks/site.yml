@@ -1,4 +1,10 @@
 ---
-- import_playbook: configure_router.yaml
-- import_playbook: install_observability.yaml
-- import_playbook: verify_connectivity.yaml
+- name: Verify connectivity playbook
+  import_playbook: verify_connectivity.yaml
+
+- name: Configure router playbook
+  import_playbook: configure_router.yaml
+
+- name: Install observability playbook
+  import_playbook: install_observability.yaml
+  
