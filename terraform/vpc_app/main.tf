@@ -65,12 +65,10 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_eip" "nat_eip" {
   domain = "vpc"
-<<<<<<< HEAD
-=======
+
   tags = {
     Name = "${var.project_name}-app-nat-eip"
   }
->>>>>>> origin/main
 }
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
