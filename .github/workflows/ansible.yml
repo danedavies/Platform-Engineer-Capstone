@@ -1,0 +1,155 @@
+---
+name: Ansible CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ansible/**
+  push:
+    branches: [main]
+    paths:
+      - ansible/**
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+env:
+  ANSIBLE_CONFIG: ansible/ansible.cfg
+  ANSIBLE_FORCE_COLOR: "1"
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install ansible ansible-lint yamllint
+          ansible-galaxy collection install -r ansible/collections/requirements.yml
+
+      - name: yamllint
+        run: yamllint ansible/
+
+      - name: ansible-lint
+        run: ansible-lint ansible/playbooks ansible/roles
+
+      - name: ansible-playbook --syntax-check
+        run: |
+          ansible-playbook ansible/playbooks/site.yml \
+            -i ansible/inventory/staging/hosts.yml \
+            --syntax-check
+
+  dry-run:
+    name: Dry Run
+    needs: validate
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install ansible
+          ansible-galaxy collection install -r ansible/collections/requirements.yml
+
+      - name: Decrypt vault password
+        run: echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > .vault_pass
+
+      - name: Configure SSH / connection creds
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Run dry-run (--check --diff)
+        id: dryrun
+        run: |
+          ansible-playbook ansible/playbooks/site.yml \
+            -i ansible/inventory/staging/hosts.yml \
+            --vault-password-file .vault_pass \
+            --check --diff | tee dryrun_output.txt
+
+      - name: Post diff to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let output = fs.readFileSync('dryrun_output.txt', 'utf8');
+            if (output.length > 60000) {
+              output = output.slice(0, 60000) + "\n... (truncated)";
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `### Ansible Dry-Run (--check --diff)\n\`\`\`diff\n${output}\n\`\`\``
+            });
+
+      - name: Cleanup secrets
+        if: always()
+        run: rm -f .vault_pass ~/.ssh/id_rsa
+
+  deploy:
+    name: Deploy
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install ansible
+          ansible-galaxy collection install -r ansible/collections/requirements.yml
+
+      - name: Decrypt vault password
+        run: echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > .vault_pass
+
+      - name: Configure SSH / connection creds
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Apply configuration
+        run: |
+          ansible-playbook ansible/playbooks/site.yml \
+            -i ansible/inventory/production/hosts.yml \
+            --vault-password-file .vault_pass
+
+      - name: Verify state / drift check
+        run: |
+          ansible-playbook ansible/playbooks/verify_state.yml \
+            -i ansible/inventory/production/hosts.yml \
+            --vault-password-file .vault_pass \
+            | tee verify_output.txt
+
+      - name: Upload verification report
+        uses: actions/upload-artifact@v4
+        with:
+          name: state-verification-${{ github.sha }}
+          path: verify_output.txt
+
+      - name: Cleanup secrets
+        if: always()
+        run: rm -f .vault_pass ~/.ssh/id_rsa

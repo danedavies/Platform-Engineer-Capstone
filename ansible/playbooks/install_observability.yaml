@@ -1,3 +1,4 @@
+---
 # Installs the full observability stack across all three roles.
 # Run order matters: node_exporter first (so Prometheus has targets to scrape),
 # then Prometheus, then Grafana (which needs the Prometheus IP to configure the datasource).
