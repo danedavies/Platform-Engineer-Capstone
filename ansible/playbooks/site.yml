@@ -7,4 +7,3 @@
 
 - name: Install observability playbook
   import_playbook: install_observability.yaml
-  
