@@ -48,4 +48,6 @@ module "ec2" {
   obs_private_subnet = module.vpc_obs.private_subnet_id
 
   router_public_subnet = module.vpc_router.public_subnet_id
+
+  project_name = var.project_name
 }
