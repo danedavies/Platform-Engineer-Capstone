@@ -13,12 +13,12 @@ filters:
 
 keyed_groups:
   - key: ec2_tags.Role
-    prefic: tag_Role
-    seperator: "_"
+    prefix: tag_Role
+    separator: "_"
 
 # Public IP for Bastion and router (publically reachable);
 # private IP as fallback for instances with no public IP.
 
-hoastnames:
+hostnames:
   - ip-address
   - private-ip-address
