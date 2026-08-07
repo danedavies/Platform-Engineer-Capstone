@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   plan:
-    if: github.event_name == 'pull_request' || github.event.inputs.action == 'plan'
+    if: github.event_name == 'pull_request' || github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
