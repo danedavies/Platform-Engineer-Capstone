@@ -12,3 +12,5 @@ rules:
   trailing-spaces: disable
 
   empty-lines: disable
+
+  new-line-at-end-of-file: disable
