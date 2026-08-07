@@ -1,6 +1,7 @@
 name: Terraform
 
 on:
+<<<<<<< HEAD
   workflow_dispatch:
     inputs:
       action:
@@ -12,10 +13,26 @@ on:
           - apply
           - destroy
           - plan
+=======
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        options: [plan, apply, destroy]
+
+concurrency:
+  group: terraform-network
+  cancel-in-progress: false
+>>>>>>> origin/main
 
 permissions:
   contents: read
 
+<<<<<<< HEAD
 env:
   TF_VERSION: "1.10.x"
   WORKING_DIR: ./terraform
@@ -45,10 +62,31 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+=======
+jobs:
+  plan:
+    if: github.event_name == 'pull_request' || github.event.inputs.action == 'plan'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: Install tflint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+>>>>>>> origin/main
 
       - name: Terraform Validate
         run: terraform validate
 
+<<<<<<< HEAD
       - name: Terraform Plan
         run: terraform plan -input=false -var="grafana_admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}" | tee /tmp/tfplan.txt
 
@@ -76,10 +114,39 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+=======
+      - name: Terraform Lint
+        run: tflint --no-color
 
       - name: Terraform Init
         run: terraform init
 
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan -input=false
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: tfplan
+
+  apply:
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      github.event.inputs.action == 'apply'
+    needs: plan
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v2
+>>>>>>> origin/main
+
+      - name: Terraform Init
+        run: terraform init
+
+<<<<<<< HEAD
       - name: Terraform Validate
         run: terraform validate
 
@@ -107,9 +174,31 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+=======
+      - uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -input=false tfplan
+
+  destroy:
+    if: github.event.inputs.action == 'destroy'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v2
+>>>>>>> origin/main
 
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Destroy
+<<<<<<< HEAD
         run: terraform destroy -auto-approve -input=false -var="grafana_admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}"
+=======
+        run: terraform destroy -auto-approve
+>>>>>>> origin/main
