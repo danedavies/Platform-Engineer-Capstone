@@ -1,0 +1,21 @@
+---
+- name: Configure application servers
+  hosts: ip-address
+  become: true
+
+  roles:
+    - node_exporter
+
+- name: Configure Prometheus
+  hosts: prometheus
+  become: true
+
+  roles:
+    - prometheus
+
+- name: Configure Grafana
+  hosts: grafana
+  become: true
+
+  roles:
+    - grafana
