@@ -3,29 +3,44 @@ name: Terraform
 on:
   pull_request:
     branches: [main]
+
   push:
-    branches: [main]
+    branches:
+      - main
+      - davidaltman920/dev
+
   workflow_dispatch:
     inputs:
       action:
         type: choice
-        options: [plan, apply, destroy]
+        options:
+          - plan
+          - apply
+          - destroy
 
 concurrency:
   group: terraform-network
   cancel-in-progress: false
 
-
 permissions:
   contents: read
 
 jobs:
+
   plan:
-    if: github.event_name == 'pull_request' || github.event.inputs.action == 'plan'
+    if: >
+      github.event_name == 'push' ||
+      github.event_name == 'pull_request' ||
+      github.event.inputs.action == 'plan' ||
+      github.event.inputs.action == 'apply'
+
     runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       id-token: write
       pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -35,18 +50,17 @@ jobs:
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
+      - name: Terraform Init
+        run: terraform init
+
       - name: Terraform Format Check
         run: terraform fmt -check
-
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Lint
         run: tflint --no-color
-
-      - name: Terraform Init
-        run: terraform init
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan -input=false
@@ -56,19 +70,23 @@ jobs:
           name: tfplan
           path: tfplan
 
+
   apply:
     if: >
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event.inputs.action == 'apply'
+
     needs: plan
     runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       id-token: write
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: hashicorp/setup-terraform@v2
-
 
       - name: Terraform Init
         run: terraform init
@@ -80,11 +98,16 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -input=false tfplan
 
+
   destroy:
     if: github.event.inputs.action == 'destroy'
+
     runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       id-token: write
+
     steps:
       - uses: actions/checkout@v4
 
