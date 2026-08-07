@@ -10,3 +10,5 @@ rules:
     allowed-values: ["true", "false"]
 
   trailing-spaces: disable
+
+  empty-lines: disable
