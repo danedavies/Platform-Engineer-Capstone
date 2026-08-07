@@ -1,3 +1,4 @@
+---
 - name: Set router hostname and domain
   cisco.ios.ios_config:
     lines:

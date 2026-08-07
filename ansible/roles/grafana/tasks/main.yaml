@@ -1,3 +1,4 @@
+---
 - name: Install Docker and Python Docker SDK
   ansible.builtin.dnf:
     name:

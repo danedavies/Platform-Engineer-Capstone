@@ -1,3 +1,4 @@
+---
 # Default values for the Cisco Catalyst 8000V Router placeholder
 
 router_hostname: captsone-router

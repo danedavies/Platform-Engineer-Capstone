@@ -1,3 +1,4 @@
+---
 # Runs on the bastion (public instance) - no ProxyJump needed.
 # Writes local.database.app -> private instance IP in /etc/hosts,
 # then verifies TCP reachability with nc. The bastion reaches the private
