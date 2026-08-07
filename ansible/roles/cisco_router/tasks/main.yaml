@@ -1,0 +1,33 @@
+- name: Set router hostname and domain
+  cisco.ios.ios_config:
+    lines:
+      - "hostname {{ router_hostname }}"
+      - "ip domain name {{ router_domain_name }}"
+  tags: [router, base]
+
+- name: Enable IP routing to route between VLANS and VPCs
+  cisco.ios.ios_config:
+    lines:
+      - "ip routing"
+  when: router_enable_ip_routing
+  tags: [router, base]
+
+- name: Segment mgmt / app / observability traffic with dot1Q subinterface configuration
+  cisco.ios.ios_config:
+    lines:
+      - "description {{ item.description }}"
+      - "encapsulation dot1Q {{ item.id }}"
+      - "ip address {{ item.ip_address }} {{ item.netmask }}"
+      - "no shutdown"
+    parents:
+      - "interface {{ router_physical_interface }}.{{ item.id }}"
+  loop: "{{ router_vlans }}"
+  loop_control:
+    label: "{{ router_physical_interface }}.{{ item.id }} (VLAN {{item.id }} - {{ item.name }})"
+  tags: [router, vlans]
+
+- name: Save running-config to startug-config
+  cisco.ios.ios_config:
+    save_when: modified
+  when: router_save_config
+  tags: [router, save]

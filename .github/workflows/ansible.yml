@@ -1,59 +1,156 @@
-name: Ansible
+name: Ansible CI/CD
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "ansible/**"
+  push:
+    branches: [main]
+    paths:
+      - "ansible/**"
   workflow_dispatch:
     inputs:
-      playbook:
-        description: "Playbook to run (relative to ansible/playbooks/)"
+      environment:
+        description: "Target environment"
         required: true
-        default: "verify_connectivity.yml"
-
-permissions:
-  contents: read
+        default: "staging"
+        type: choice
+        options: [staging, production]
 
 env:
-  KEY_PATH: /tmp/capstone-key.pem
-  SSM_KEY_PARAMETER: /capstone/dev/ssh-key
+  ANSIBLE_CONFIG: ansible/ansible.cfg
+  ANSIBLE_FORCE_COLOR: "1"
 
 jobs:
-  run-playbook:
-    name: Run Playbook
+  validate:
+    name: Validate
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - uses: actions/setup-python@v5
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          python-version: "3.12"
 
-      - name: Fetch SSH key from SSM Parameter Store
+      - name: Install dependencies
         run: |
-          aws ssm get-parameter \
-            --name "${{ env.SSM_KEY_PARAMETER }}" \
-            --with-decryption \
-            --query "Parameter.Value" \
-            --output text > ${{ env.KEY_PATH }}
-          chmod 400 ${{ env.KEY_PATH }}
+          pip install ansible ansible-lint yamllint
+          ansible-galaxy collection install -r ansible/collections/requirements.yml
 
-      - name: Install Ansible and AWS collection
+      - name: yamllint
+        run: yamllint ansible/
+
+      - name: ansible-lint
+        run: ansible-lint ansible/playbooks ansible/roles
+
+      - name: ansible-playbook --syntax-check
         run: |
-          pip install ansible boto3 botocore
-          ansible-galaxy collection install amazon.aws community.docker
+          ansible-playbook ansible/playbooks/site.yml \
+            -i ansible/inventory/staging/hosts.yml \
+            --syntax-check
 
-      - name: Run playbook
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: "False"
-          ANSIBLE_CONFIG: ansible/ansible.cfg
+  dry-run:
+    name: Dry Run
+    needs: validate
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
         run: |
-          ansible-playbook \
-            -i ansible/inventory/aws_ec2.yml \
-            -e "ansible_ssh_private_key_file=${{ env.KEY_PATH }}" \
-            ansible/playbooks/${{ github.event.inputs.playbook }}
+          pip install ansible
+          ansible-galaxy collection install -r ansible/collections/requirements.yml
 
-      - name: Clean up key
+      - name: Decrypt vault password
+        run: echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > .vault_pass
+
+      - name: Configure SSH / connection creds
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Run dry-run (--check --diff)
+        id: dryrun
+        run: |
+          ansible-playbook ansible/playbooks/site.yml \
+            -i ansible/inventory/staging/hosts.yml \
+            --vault-password-file .vault_pass \
+            --check --diff | tee dryrun_output.txt
+
+      - name: Post diff to PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let output = fs.readFileSync('dryrun_output.txt', 'utf8');
+            if (output.length > 60000) {
+              output = output.slice(0, 60000) + "\n... (truncated)";
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `### Ansible Dry-Run (--check --diff)\n\`\`\`diff\n${output}\n\`\`\``
+            });
+
+      - name: Cleanup secrets
         if: always()
-        run: rm -f ${{ env.KEY_PATH }}
+        run: rm -f .vault_pass ~/.ssh/id_rsa
+
+  deploy:
+    name: Deploy
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install ansible
+          ansible-galaxy collection install -r ansible/collections/requirements.yml
+
+      - name: Decrypt vault password
+        run: echo "${{ secrets.ANSIBLE_VAULT_PASSWORD }}" > .vault_pass
+
+      - name: Configure SSH / connection creds
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Apply configuration
+        run: |
+          ansible-playbook ansible/playbooks/site.yml \
+            -i ansible/inventory/production/hosts.yml \
+            --vault-password-file .vault_pass
+
+      - name: Verify state / drift check
+        run: |
+          ansible-playbook ansible/playbooks/verify_state.yml \
+            -i ansible/inventory/production/hosts.yml \
+            --vault-password-file .vault_pass \
+            | tee verify_output.txt
+
+      - name: Upload verification report
+        uses: actions/upload-artifact@v4
+        with:
+          name: state-verification-${{ github.sha }}
+          path: verify_output.txt
+
+      - name: Cleanup secrets
+        if: always()
+        run: rm -f .vault_pass ~/.ssh/id_rsa
+
