@@ -1,3 +1,4 @@
+---
 - name: Restart Prometheus
   community.docker.docker_container:
     name: prometheus
