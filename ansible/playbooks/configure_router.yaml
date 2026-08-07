@@ -1,0 +1,5 @@
+- name: Configure Cisco software on router VPC3
+  hosts: tag_Role_router
+  gather_facts: false
+  roles:
+    - cisco_router
