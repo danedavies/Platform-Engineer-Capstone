@@ -1,3 +1,4 @@
+---
 name: Terraform
 
 on:
@@ -36,7 +37,7 @@ jobs:
         working-directory: ./terraform
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials

@@ -1,3 +1,4 @@
+---
 - name: Install Docker and Python Docker SDK
   ansible.builtin.dnf:
     name:
@@ -31,6 +32,6 @@
     state: started
     restart_policy: always
     ports:
-      - "9090:9090"
+      - 9090:9090
     volumes:
-      - "/etc/prometheus/prometheus.yaml:/etc/prometheus.yaml:ro,z"
+      - /etc/prometheus/prometheus.yaml:/etc/prometheus.yaml:ro,z
