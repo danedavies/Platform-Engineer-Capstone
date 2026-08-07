@@ -36,10 +36,10 @@
     state: started
     restart_policy: always
     ports:
-      - "3000:3000"
+      - 3000:3000
     env:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: "{{ grafana_admin_password }}"
     volumes:
-      - "/etc/grafana/provisioning:/etc/grafana/provisioning:ro,z"
-      - "grafana_data:/var/lib/grafana"
+      - /etc/grafana/provisioning:/etc/grafana/provisioning:ro,z
+      - grafana_data:/var/lib/grafana

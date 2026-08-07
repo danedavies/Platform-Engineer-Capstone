@@ -1,23 +1,23 @@
+---
 name: Ansible CI/CD
 
 on:
   pull_request:
     branches: [main]
     paths:
-      - "ansible/**"
+      - ansible/**
   push:
     branches: [main]
     paths:
-      - "ansible/**"
+      - ansible/**
   workflow_dispatch:
     inputs:
       environment:
-        description: "Target environment"
+        description: Target environment
         required: true
-        default: "staging"
+        default: staging
         type: choice
         options: [staging, production]
-
 env:
   ANSIBLE_CONFIG: ansible/ansible.cfg
   ANSIBLE_FORCE_COLOR: "1"

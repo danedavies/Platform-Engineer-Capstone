@@ -19,7 +19,7 @@
     - name: Add local.batabase.app to /etv/hosts
       ansible.builtin.lineinfile:
         path: /etc/hosts
-        regexp: 'local\.database\.app'
+        regexp: local\.database\.app
         line: "{{ private_ip }} local.database.app"
         state: present
 
@@ -32,4 +32,4 @@
 
     - name: Show result
       ansible.builtin.debug:
-        msg: "bastion -> local.database.app ({{ private_ip }}):22 - OK"
+        msg: bastion -> local.database.app ({{ private_ip }}):22 - OK
