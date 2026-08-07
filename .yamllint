@@ -8,3 +8,5 @@ rules:
     max: 200
   truthy:
     allowed-values: ["true", "false"]
+
+  trailing-spaces: disable
