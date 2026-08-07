@@ -75,7 +75,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const plan = fs.readFileSync('tfplan.txt', 'utf8');
+            const plan = fs.readFileSync('./terraform/tfplan.txt', 'utf8');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -86,7 +86,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: tfplan.txt
+          path: ./terraform/tfplan.txt
 
   apply:
     if: >
@@ -119,7 +119,7 @@ jobs:
           name: tfplan
 
       - name: Terraform Apply
-        run: terraform apply -input=false tfplan.txt
+        run: terraform apply -input=false ./terraform/tfplan.txt
 
   destroy:
     if: github.event.inputs.action == 'destroy'
