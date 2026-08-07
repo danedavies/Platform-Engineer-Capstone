@@ -1,0 +1,4 @@
+---
+- import_playbook: configure_router.yaml
+- import_playbook: install_observability.yaml
+- import_playbook: ansible/playbooks/verify_connectivity.yaml
