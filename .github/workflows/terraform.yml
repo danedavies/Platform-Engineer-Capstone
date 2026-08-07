@@ -46,7 +46,33 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show GitHub OIDC Claims
+        shell: bash
+        run: |
+          TOKEN=$(curl -sLS \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" \
+            | jq -r '.value')
+    
+          PAYLOAD=$(echo "$TOKEN" | cut -d '.' -f2 | tr '_-' '/+')
+          PADDING=$((4 - ${#PAYLOAD} % 4))
+    
+          if [ "$PADDING" -lt 4 ]; then
+            PAYLOAD="${PAYLOAD}$(printf '=%.0s' $(seq 1 $PADDING))"
+          fi
+    
+          echo "$PAYLOAD" | base64 -d | jq '{
+            sub,
+            aud,
+            repository,
+            repository_id,
+            repository_owner,
+            repository_owner_id,
+            ref
+          }'    
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6
