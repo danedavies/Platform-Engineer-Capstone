@@ -12,8 +12,8 @@
     dest: /tmp/node_exporter.tar.gz
     mode: "0644"
     timeout: 60
-  register: download_result
-  until: download_result is succeeded
+  register: node_exporter_download_result
+  until: node_exporter_download_result is succeeded
   retries: 3
   delay: 10
 
