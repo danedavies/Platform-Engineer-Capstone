@@ -1,19 +1,6 @@
 name: Terraform
 
 on:
-<<<<<<< HEAD
-  workflow_dispatch:
-    inputs:
-      action:
-        description: "plan, apply or destroy"
-        required: true
-        default: "apply"
-        type: choice
-        options:
-          - apply
-          - destroy
-          - plan
-=======
   pull_request:
     branches: [main]
   push:
@@ -27,42 +14,11 @@ on:
 concurrency:
   group: terraform-network
   cancel-in-progress: false
->>>>>>> origin/main
+
 
 permissions:
   contents: read
 
-<<<<<<< HEAD
-env:
-  TF_VERSION: "1.10.x"
-  WORKING_DIR: ./terraform
-
-jobs:
-  terraform-plan:
-    name: Plan
-    runs-on: ubuntu-latest
-    if: github.event.inputs.action == 'plan'
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIR }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Terraform Init
-        run: terraform init
-=======
 jobs:
   plan:
     if: github.event_name == 'pull_request' || github.event.inputs.action == 'plan'
@@ -81,40 +37,11 @@ jobs:
 
       - name: Terraform Format Check
         run: terraform fmt -check
->>>>>>> origin/main
+
 
       - name: Terraform Validate
         run: terraform validate
 
-<<<<<<< HEAD
-      - name: Terraform Plan
-        run: terraform plan -input=false -var="grafana_admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}" | tee /tmp/tfplan.txt
-
-      - name: Post Plan to Summary
-        run: cat /tmp/tfplan.txt >> $GITHUB_STEP_SUMMARY
-
-  terraform-apply:
-    name: Apply
-    runs-on: ubuntu-latest
-    if: github.event.inputs.action == 'apply'
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIR }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-=======
       - name: Terraform Lint
         run: tflint --no-color
 
@@ -141,40 +68,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: hashicorp/setup-terraform@v2
->>>>>>> origin/main
+
 
       - name: Terraform Init
         run: terraform init
 
-<<<<<<< HEAD
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false -var="grafana_admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}"
-
-  terraform-destroy:
-    name: Destroy
-    runs-on: ubuntu-latest
-    if: github.event.inputs.action == 'destroy'
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIR }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-=======
       - uses: actions/download-artifact@v4
         with:
           name: tfplan
@@ -191,14 +89,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: hashicorp/setup-terraform@v2
->>>>>>> origin/main
 
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Destroy
-<<<<<<< HEAD
-        run: terraform destroy -auto-approve -input=false -var="grafana_admin_password=${{ secrets.GRAFANA_ADMIN_PASSWORD }}"
-=======
         run: terraform destroy -auto-approve
->>>>>>> origin/main
