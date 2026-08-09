@@ -55,6 +55,11 @@ jobs:
     needs: validate
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -75,6 +80,13 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+
+      - name: Test Ansible connectivity
+        run: |
+          ansible all \
+            -i ansible/inventory/staging/hosts.yml \
+            -m ansible.builtin.ping \
+            --vault-password-file .vault_pass
 
       - name: Run dry-run (--check --diff)
         id: dryrun
