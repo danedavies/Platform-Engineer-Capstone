@@ -80,8 +80,15 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `### Terraform Plan Diff\n\`\`\`\n${plan}\n\`\`\``
-            });
+              body: `<details>
+              <summary>Terraform Plan Diff (click to expand)</summary>
+
+              \`\`\`
+              ${plan}
+              \`\`\`
+
+              </details>`
+                    });
 
       - uses: actions/upload-artifact@v4
         with:
