@@ -24,7 +24,7 @@
       - interface {{ cisco_router_physical_interface }}.{{ item.id }}
   loop: "{{ cisco_router_vlans }}"
   loop_control:
-    label: "{{ cisco_router_physical_interface }}.{{ item.id }} (VLAN {{item.id }} - {{ item.name }})"
+    label: "{{ cisco_router_physical_interface }}.{{ item.id }} (VLAN {{ item.id }} - {{ item.name }})"
   tags: [router, vlans]
 
 - name: Save running-config to startug-config

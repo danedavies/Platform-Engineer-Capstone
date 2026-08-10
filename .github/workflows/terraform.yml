@@ -1,4 +1,3 @@
----
 name: Terraform
 
 on:
@@ -32,17 +31,22 @@ defaults:
 jobs:
 
   plan:
-
-    if: github.event_name == 'pull_request' || github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply'
+    if: github.event_name == 'pull_request' || 
+        github.event.inputs.action == 'plan' || 
+        github.event.inputs.action == 'apply'
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
       id-token: write
       pull-requests: write
+      
+    defaults:
+      run:
+        working-directory: ./terraform
+
     steps:
       - uses: actions/checkout@v4
-
       - uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials
@@ -71,13 +75,41 @@ jobs:
       - name: Terraform Lint
         run: tflint --no-color
 
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan -input=false
+      # REAL binary plan file
+      - name: Terraform Plan (binary)
+        run: terraform plan -out=tfplan.binary
 
+      # Human-readable plan for PR diff
+      - name: Terraform Plan (text for PR)
+        run: terraform show -no-color tfplan.binary > tfplan.txt
+
+      - name: Comment PR with plan diff
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const plan = fs.readFileSync('./terraform/tfplan.txt', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `<details>
+              <summary>Terraform Plan Diff (click to expand)</summary>
+
+              \`\`\`
+              ${plan}
+              \`\`\`
+
+              </details>`
+              });
+
+      # Upload binary plan for Apply
       - uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: tfplan
+          path: ./terraform/tfplan.binary
 
 
   apply:
@@ -91,6 +123,10 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    defaults:
+      run:
+        working-directory: ./terraform
+
     steps:
       - uses: actions/checkout@v4
 
@@ -106,13 +142,14 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      # Download binary plan into terraform directory
       - uses: actions/download-artifact@v4
         with:
           name: tfplan
           path: terraform/tfplan
 
       - name: Terraform Apply
-        run: terraform apply -input=false tfplan
+        run: terraform apply -input=false tfplan.binary
 
 
   destroy:
@@ -123,6 +160,10 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    defaults:
+      run:
+        working-directory: ./terraform
+
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
