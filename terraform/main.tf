@@ -40,8 +40,8 @@ module "ec2" {
   # Required inputs
   vpc_id = module.vpc_app.vpc_id
 
-  ami           = "ami-0f9fc25dd2506cf6d" # Amazon Linux 2 AMI
-  project_name  = var.project_name
+  ami          = "ami-0f9fc25dd2506cf6d" # Amazon Linux 2 AMI
+  project_name = var.project_name
 
   # App VPC subnets
   app_public_subnet = module.vpc_app.public_subnet_id
