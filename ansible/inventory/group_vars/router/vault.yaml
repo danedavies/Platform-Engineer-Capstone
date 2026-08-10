@@ -1,4 +1,0 @@
-# Add vault become password and review for anything else that needs vaulted
-
-# Encrypt with: ansible-vault encrypt inventory/group_vars/router/vault.yaml  --vault-password-file ~/Capstone/Platform-Engineer-Capstone/ansible
-
