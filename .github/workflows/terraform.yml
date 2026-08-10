@@ -141,7 +141,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tfplan
-          path: terraform/tfplan
+          path: .
 
       - name: Terraform Apply
         run: terraform apply -input=false tfplan.binary
