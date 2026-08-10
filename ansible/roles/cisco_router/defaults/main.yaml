@@ -29,3 +29,16 @@ cisco_router_enable_ip_routing: true
 
 # Ensure config survives on reload with true, set false to leave changes in
 cisco_router_save_config: true
+
+##################
+# BGP Peering
+##################
+
+cisco_router_bgp_as: 65001
+cisco_router_router_id: 10.2.0.150
+
+cisco_router_bgp_neighbors: []
+cisco_router_bgp_networks:
+  - 10.0.0.0/16
+  - 10.1.0.0/16
+  - 10.2.0.0/16

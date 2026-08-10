@@ -1,0 +1,24 @@
+- name: Enable BGP process
+  cisco.ios.ios_config:
+    parents:
+      - "router bgp {{ cisco_router_bgp_as }}"
+    lines:
+      - "bgp router-id {{ cisco_router_router_id }}"
+      - "bgp log-neighbor-changes"
+
+- name: COnfigure BGP neighbors
+  cisco.ios.ios_config:
+    parents:
+      - "router bgp {{ cisco_router_bgp_as }}"
+    lines:
+      - "neighbor {{ item.ip }} remote-as {{ item.remote-as }}"
+  loop: "{{ cisco_router_bgp_neighbors }}"
+
+- name: Advertise networks
+  cisco.ios.ios_config:
+    parents:
+      - "router bgp {{ cisco_router_bgp_as }}"
+    lines:
+      - "network {{ item }}"
+  loop: "{{ cisco_router_bgp_networks }}"
+

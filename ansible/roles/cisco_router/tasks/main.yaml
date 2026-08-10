@@ -32,3 +32,12 @@
     save_when: modified
   when: cisco_router_save_config
   tags: [router, save]
+
+#########################
+# BGP Config and Verify
+#########################
+- name: Configure BGP
+  ansible.builtin.import_tasks: bgp.yaml
+
+- name: Verify BGP
+  ansible.builtin.import_tasks: verify_bgp.yaml
