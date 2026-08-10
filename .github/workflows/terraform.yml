@@ -5,7 +5,9 @@ on:
     branches: [main]
 
   push:
-    branches: [main]
+    branches:
+      - main
+      - davidaltman920/dev
 
   workflow_dispatch:
     inputs:
@@ -13,11 +15,7 @@ on:
         description: "Choose plan, apply, or destroy"
         required: true
         type: choice
-        options:
-          - plan
-          - apply
-          - destroy
-        default: plan
+        options: [plan, apply, destroy]
 
 concurrency:
   group: terraform-network
@@ -26,15 +24,23 @@ concurrency:
 permissions:
   contents: read
 
+defaults:
+  run:
+    working-directory: terraform
+
 jobs:
+
   plan:
-    if: github.event_name == 'pull_request' ||
-        github.event.inputs.action == 'plan' ||
-        (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'pull_request' || 
+        github.event.inputs.action == 'plan' || 
+        github.event.inputs.action == 'apply'
     runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       id-token: write
       pull-requests: write
+      
     defaults:
       run:
         working-directory: ./terraform
@@ -53,6 +59,9 @@ jobs:
       - name: Install tflint
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Terraform Init
+        run: terraform init
 
       - name: Terraform Format Check
         run: terraform fmt -check
@@ -100,11 +109,14 @@ jobs:
           name: tfplan
           path: ./terraform/tfplan.binary
 
+
   apply:
     if: github.event.inputs.action == 'apply'
     needs: plan
     runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       id-token: write
     defaults:
       run:
@@ -112,6 +124,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: hashicorp/setup-terraform@v2
 
       - name: Configure AWS credentials
@@ -133,10 +146,14 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -input=false tfplan.binary
 
+
   destroy:
     if: github.event.inputs.action == 'destroy'
+
     runs-on: ubuntu-latest
+
     permissions:
+      contents: read
       id-token: write
     defaults:
       run:
