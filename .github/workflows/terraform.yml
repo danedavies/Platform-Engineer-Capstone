@@ -102,6 +102,9 @@ jobs:
           name: tfplan
           path: ./terraform/tfplan.binary
 
+      - name: Check if tfplan.binary exists
+        run: ls -l ./terraform
+
 
   apply:
     if: github.event.inputs.action == 'apply'
