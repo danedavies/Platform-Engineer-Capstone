@@ -2,18 +2,18 @@
   cisco.ios.ios_command:
     commands:
       - show ip bgp summary
-  register: bgp_summary
+  register: cisco_router_bgp_summary
 
 - name: Show learned routes
   cisco.ios.ios_command:
     commands:
       - show ip route bgp
-  register: bgp_routes
+  register: cisco_router_bgp_routes
 
 - name: Display BGP summary
   debug:
-    var: bgp_summary.stdout_lines
+    var: cisco_router_bgp_summary.stdout_lines
 
 - name: Display BGP routes
   debug:
-    var: bgp_routes.stdout_lines
+    var: cisco_router_bgp_routes.stdout_lines

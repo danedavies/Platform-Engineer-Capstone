@@ -37,7 +37,7 @@
 # BGP Config and Verify
 #########################
 - name: Configure BGP
-  import_tasks: bgp.yaml
+  ansible.builtin.import_tasks: bgp.yaml
 
 - name: Verify BGP
-  import_tasks: verify_bgp.yaml
+  ansible.builtin.import_tasks: verify_bgp.yaml

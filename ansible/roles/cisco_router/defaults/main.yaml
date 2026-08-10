@@ -31,15 +31,14 @@ cisco_router_enable_ip_routing: true
 cisco_router_save_config: true
 
 ##################
-# BGP Peering 
+# BGP Peering
 ##################
 
-bgp_as: 65001
-router_id: 10.2.0.150
+cisco_router_bgp_as: 65001
+cisco_router_router_id: 10.2.0.150
 
-neighbors: []
-
-networks: 
+cisco_router_bgp_neighbors: []
+cisco_router_bgp_networks:
   - 10.0.0.0/16
   - 10.1.0.0/16
   - 10.2.0.0/16
