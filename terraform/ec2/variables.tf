@@ -14,6 +14,11 @@ variable "app_public_subnet" {
   description = "Public subnet for bastion"
 }
 
+variable "vpc_id" {
+  description = "VPC ID for EC2 resources"
+  type        = string
+}
+
 variable "app_private_1" {
   type        = string
   description = "Private subnet for app instance 1"
