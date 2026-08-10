@@ -2,7 +2,7 @@ resource "aws_instance" "bastion" {
   ami           = var.ami
   instance_type = "t3.medium"
 
-  key_name = capstonekey.pem
+  key_name = "capstonekey"
 
   subnet_id     = var.app_public_subnet
   tags = { Name = "${var.project_name}-bastion" }
