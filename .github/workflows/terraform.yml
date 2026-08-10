@@ -66,11 +66,9 @@ jobs:
       - name: Terraform Lint
         run: tflint --no-color
 
-      # REAL binary plan file
       - name: Terraform Plan (binary)
-        run: terraform plan -out=tfplan.binary
+        run: terraform plan -input=false -out=tfplan.binary
 
-      # Human-readable plan for PR diff
       - name: Terraform Plan (text for PR)
         run: terraform show -no-color tfplan.binary > tfplan.txt
 
@@ -94,18 +92,16 @@ jobs:
               \`\`\`
 
               </details>`
-              });
+            });
 
-      # Upload binary plan for Apply
-      - uses: actions/upload-artifact@v4
+      - name: Upload binary plan for Apply
+        uses: actions/upload-artifact@v4
         with:
           name: tfplan
           path: ./terraform/tfplan.binary
 
   apply:
-    if: >
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      github.event.inputs.action == 'apply'
+    if: github.event.inputs.action == 'apply'
     needs: plan
     runs-on: ubuntu-latest
     permissions:
@@ -128,8 +124,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      # Download binary plan into terraform directory
-      - uses: actions/download-artifact@v4
+      - name: Download binary plan
+        uses: actions/download-artifact@v4
         with:
           name: tfplan
           path: ./terraform
