@@ -8,7 +8,7 @@
 
 - name: Download node_exporter
   ansible.builtin.get_url:
-    url: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz
+    url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
     dest: /tmp/node_exporter.tar.gz
     mode: "0644"
     timeout: 60
@@ -25,7 +25,7 @@
 
 - name: Install node_exporter binary
   ansible.builtin.copy:
-    src: /tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter
+    src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
     dest: /usr/local/bin/node_exporter
     owner: node_exporter
     group: node_exporter
