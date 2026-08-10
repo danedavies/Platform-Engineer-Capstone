@@ -20,6 +20,8 @@ rules:
   octal-values:
     forbid-implicit-octal: true
     forbid-explicit-octal: true
+  empty-lines:
+    max: 5
 
 ignore: |
   .github/
