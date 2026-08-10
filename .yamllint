@@ -1,14 +1,36 @@
 ---
-# .yamllint
 extends: default
 
 rules:
-  document-start: enable
+  document-start:
+    present: true
   line-length:
     max: 200
+    level: warning
   truthy:
     allowed-values: ["true", "false"]
+
+  trailing-spaces: disable
+
+  empty-lines: disable
+
+  new-line-at-end-of-file: disable
+  indentation:
+    spaces: 2
+    indent-sequences: true
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: false
+  braces:
+    max-spaces-inside: 1
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
   empty-lines:
     max: 1
 
-trailing-spaces: disable
+ignore: |
+  .github/
+  collections/
+  terraform/
+  terraform.yml
