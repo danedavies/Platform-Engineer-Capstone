@@ -1,3 +1,4 @@
+---
 - name: Enable BGP process
   cisco.ios.ios_config:
     parents:

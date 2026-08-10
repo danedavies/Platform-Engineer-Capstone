@@ -1,3 +1,4 @@
+---
 - name: Show BGP summary
   cisco.ios.ios_command:
     commands:
@@ -11,9 +12,9 @@
   register: cisco_router_bgp_routes
 
 - name: Display BGP summary
-  debug:
+  ansible.builtin.debug:
     var: cisco_router_bgp_summary.stdout_lines
 
 - name: Display BGP routes
-  debug:
+  ansible.builtin.debug:
     var: cisco_router_bgp_routes.stdout_lines
