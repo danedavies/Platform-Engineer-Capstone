@@ -23,7 +23,7 @@ resource "aws_vpn_connection" "app" {
 
   type = "ipsec.1"
 
-  statis_routes_only = false
+  static_routes_only = false
 
   tags = {
     Name = "${var.project_name}-app-vpn"
