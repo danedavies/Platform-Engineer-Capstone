@@ -1,7 +1,7 @@
 # Platform Engineer Networking Capstone
 # Operating the Network as Code: Automating Configuration, Connectivity, and Change
 
-👥 ##Team
+👥 ## Team
 
 - Connor Klingensmith  
 - Corey Dorsey  
