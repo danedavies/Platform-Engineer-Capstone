@@ -455,7 +455,7 @@ These workflows are intended to automate infrastructure and configuration valida
 ```
 ---
 
-🚀 **CI/CD Pipeline**
+## 🚀 **CI/CD Pipeline**
 
 The pipeline includes:
 
@@ -475,6 +475,7 @@ The pipeline includes:
 - Post-deployment validation  
 
 Guardrails ensure safe promotion between environments.
+
 ---
 
  **Observability**
@@ -487,6 +488,7 @@ The solution provides visibility into:
 - Validation checks and API polling results  
 
 This enables teams to detect failures, correct them through code, and re-run the workflow.
+
 ---
 
 🎬 **Final Demonstration Scenario**
