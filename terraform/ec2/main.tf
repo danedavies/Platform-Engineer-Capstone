@@ -49,6 +49,36 @@ resource "aws_instance" "bastion" {
 }
 
 ############################################
+# Private App Security Group (Node Exporter)
+############################################
+resource "aws_security_group" "private_app" {
+  name        = "${var.project_name}-private-app-sg"
+  description = "Allow Prometheus to scrape node_exporter"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Node Exporter"
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    security_groups = [aws_security_group.prometheus_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name    = "${var.project_name}-private-app-sg"
+    Project = "capstone"
+    Role    = "private_app"
+  }
+}
+
+############################################
 # App Servers (Private)
 ############################################
 resource "aws_instance" "app1" {
@@ -78,13 +108,105 @@ resource "aws_instance" "app2" {
 }
 
 ############################################
+# Prometheus Security Group
+############################################
+resource "aws_security_group" "prometheus_sg" {
+  name        = "${var.project_name}-prometheus-sg"
+  description = "Allow bastion to access Prometheus UI"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Prometheus UI"
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name    = "${var.project_name}-prometheus-sg"
+    Project = "capstone"
+    Role    = "prometheus"
+  }
+}
+
+############################################
+# Grafana Security Group
+############################################
+resource "aws_security_group" "grafana_sg" {
+  name        = "${var.project_name}-grafana-sg"
+  description = "Allow bastion to access Grafana UI"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Grafana UI"
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name    = "${var.project_name}-grafana-sg"
+    Project = "capstone"
+    Role    = "grafana"
+  }
+}
+
+############################################
+# Router Security Group
+############################################
+resource "aws_security_group" "router" {
+  name        = "${var.project_name}-router-sg"
+  description = "Allow SSH and routing traffic"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "SSH from bastion"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
+  # Router needs wide egress so it can forward traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name    = "${var.project_name}-router-sg"
+    Project = "capstone"
+    Role    = "router_sg"
+  }
+}
+
+
+############################################
 # Observability Stack
 ############################################
 resource "aws_instance" "grafana" {
   ami                    = var.ami
   instance_type          = "t3.medium"
   subnet_id              = var.obs_public_subnet
-  vpc_security_group_ids = [aws_security_group.grafana.id]
+  vpc_security_group_ids = [aws_security_group.grafana_sg.id]
 
   tags = {
     Name    = "${var.project_name}-grafana"
@@ -97,7 +219,7 @@ resource "aws_instance" "prometheus" {
   ami                    = var.ami
   instance_type          = "t3.medium"
   subnet_id              = var.obs_private_subnet
-  vpc_security_group_ids = [aws_security_group.prometheus.id]
+  vpc_security_group_ids = [aws_security_group.prometheus_sg.id]
 
   tags = {
     Name    = "${var.project_name}-prometheus"
@@ -107,7 +229,7 @@ resource "aws_instance" "prometheus" {
 }
 
 ############################################
-# Router Placeholder (Corrected)
+# Router Placeholder
 ############################################
 resource "aws_instance" "router_placeholder" {
   ami                    = var.ami
@@ -115,11 +237,8 @@ resource "aws_instance" "router_placeholder" {
   subnet_id              = var.router_public_subnet
   vpc_security_group_ids = [aws_security_group.router.id]
 
-  # Router needs a public IP for SSH + Ansible access
   associate_public_ip_address = true
-
-  # Required for any EC2 acting as a router
-  source_dest_check = false
+  source_dest_check           = false
 
   tags = {
     Name    = "${var.project_name}-router"
