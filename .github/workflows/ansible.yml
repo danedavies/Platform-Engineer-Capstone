@@ -78,8 +78,8 @@ jobs:
       - name: Configure SSH / connection creds
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
+          chmod 600 ~/.ssh/capstonekey.pem  # Not our local capstone key!
 
       - name: Test Ansible connectivity
         run: |
@@ -114,7 +114,7 @@ jobs:
 
       - name: Cleanup secrets
         if: always()
-        run: rm -f .vault_pass ~/.ssh/id_rsa
+        run: rm -f .vault_pass ~/.ssh/capstonekey.pem
 
   deploy:
     name: Deploy
@@ -140,8 +140,8 @@ jobs:
       - name: Configure SSH / connection creds
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
+          chmod 600 ~/.ssh/capstonekey.pem
 
       - name: Apply configuration
         run: |
@@ -164,4 +164,4 @@ jobs:
 
       - name: Cleanup secrets
         if: always()
-        run: rm -f .vault_pass ~/.ssh/id_rsa
+        run: rm -f .vault_pass ~/.ssh/capstonekey.pem
