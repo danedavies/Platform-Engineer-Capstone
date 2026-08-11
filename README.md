@@ -234,11 +234,11 @@ TCP Port 9100
 ```
 Metrics include information about:
 
-CPU utilization
-Memory utilization
-Network traffic
-Filesystem usage
-Host availability
+- CPU utilization
+- Memory utilization
+- Network traffic
+- Filesystem usage
+- Host availability
 
 ## Prometheus
 Prometheus collects metrics from the configured node_exporter targets.
