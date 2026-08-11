@@ -30,7 +30,7 @@ resource "aws_vpn_connection" "app" {
   }
 }
 
-resource "aws_vpn_gateway_route_propogation" "app" {
+resource "aws_vpn_gateway_route_propagation" "app" {
   vpn_gateway_id = aws_vpn_gateway.app.id
   route_table_id = aws_route_table.private_rt.id
 }
