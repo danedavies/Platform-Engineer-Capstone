@@ -57,7 +57,7 @@ module "vpn" {
 
   app_vpc_id                 = module.vpc_app.vpc_id
   app_private_route_table_id = module.vpc_app.private_route_table_id
-  router_public_ip           = module.ec2.router_public_ip
+  router_public_ip           = module.ec2.router_placeholder_public_ip
 
   router_bgp_asn = 65001
   aws_bgp_asn    = 64512
