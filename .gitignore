@@ -6,9 +6,6 @@
 *.tfstate
 *.tfstate.*
 
-# Terraform lock file (can cause merge conflicts and bloat)
-.terraform.lock.hcl
-
 # Crash logs
 crash.log
 crash.*.log
