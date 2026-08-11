@@ -282,7 +282,9 @@ These include:
 - The private application servers are not directly exposed to the public internet.
 
 Public HTTP traffic enters through the router and is then forwarded to the private application servers.
+
 ---
+
 ## Infrastructure as Code
 The AWS infrastructure is defined using Terraform.
 
