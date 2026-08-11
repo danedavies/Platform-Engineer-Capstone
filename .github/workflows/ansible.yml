@@ -143,6 +143,16 @@ jobs:
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
           chmod 600 ~/.ssh/capstonekey.pem
 
+      # One off to test if key is malformed
+      - name: Debug key file integrity (no secret contents printed)
+        run: |
+          wc -l ~/.ssh/capstonekey.pem
+          head -1 ~/.ssh/capstonekey.pem
+          tail -1 ~/.ssh/capstonekey.pem
+          ssh-keygen -y -f ~/.ssh/capstonekey.pem > /dev/null \
+            && echo "Key parses OK" \
+            || echo "Key file is INVALID / malformed"
+
       - name: Apply configuration
         run: |
           ansible-playbook ansible/playbooks/site.yml \
