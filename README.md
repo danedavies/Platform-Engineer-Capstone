@@ -272,14 +272,14 @@ The project uses multiple layers of AWS network security.
 
 These include:
 
-Security Groups
-Private application subnets
-Bastion-based administrative access
-NAT Gateway for outbound private subnet connectivity
-VPC peering
-IAM roles
-Controlled inbound application access
-The private application servers are not directly exposed to the public internet.
+- Security Groups
+- Private application subnets
+- Bastion-based administrative access
+- NAT Gateway for outbound private subnet connectivity
+- VPC peering
+- IAM roles
+- Controlled inbound application access
+- The private application servers are not directly exposed to the public internet.
 
 Public HTTP traffic enters through the router and is then forwarded to the private application servers.
 ---
