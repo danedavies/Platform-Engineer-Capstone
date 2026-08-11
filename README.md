@@ -20,7 +20,7 @@ The environment includes multiple VPCs, VPC peering, public and private subnets,
 
 ---
 
-## 🎯 Architecture
+## 🏛️ Architecture
 
 The environment consists of three VPCs:
 
@@ -267,7 +267,7 @@ CPU usage
 - Network receive traffic
 - Network transmit traffic
 ---
-## Security
+## 🔐 Security
 The project uses multiple layers of AWS network security.
 
 These include:
@@ -285,7 +285,7 @@ Public HTTP traffic enters through the router and is then forwarded to the priva
 
 ---
 
-## Infrastructure as Code
+## 🧱 Infrastructure as Code
 The AWS infrastructure is defined using Terraform.
 
 This provides:
@@ -303,7 +303,7 @@ terraform validate
 terraform plan
 ```
 ---
-## Configuration as Code
+## 🛠️ Configuration as Code
 Server configuration is managed through Ansible playbooks.
 
 Playbooks can be validated before execution using:
@@ -321,7 +321,7 @@ ansible-playbook ansible/playbooks/<playbook>.yml
 
 ---
 
-## Idempotency
+## 🔁 Idempotency
 Ansible playbooks were tested for idempotency.
 
 After the desired configuration has already been applied, running the playbook again produces results such as:
@@ -334,7 +334,7 @@ This demonstrates that the automation does not unnecessarily modify resources th
 
 ---
 
-## CI/CD
+## 🚀 CI/CD
 GitHub Actions workflow files are stored under:
 ```
 .github/workflows/
@@ -348,7 +348,7 @@ These workflows are intended to automate infrastructure and configuration valida
 
 ---
 
-## Repository Structure
+## 🏗️ Repository Structure
 ```
 ├── README.md
 │
@@ -478,7 +478,7 @@ Guardrails ensure safe promotion between environments.
 
 ---
 
- **Observability**
+📡 **Observability**
 
 The solution provides visibility into:
 
