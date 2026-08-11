@@ -37,11 +37,13 @@ module "peering" {
 module "ec2" {
   source = "./ec2"
 
-  # Required inputs
-  vpc_id = module.vpc_app.vpc_id
-
-  ami          = "ami-0f9fc25dd2506cf6d" # Amazon Linux 2 AMI
   project_name = var.project_name
+  ami          = var.ami
+
+  # VPC IDs
+  app_vpc_id    = module.vpc_app.vpc_id
+  obs_vpc_id    = module.vpc_obs.vpc_id
+  router_vpc_id = module.vpc_router.vpc_id
 
   # App VPC subnets
   app_public_subnet = module.vpc_app.public_subnet_id
@@ -55,6 +57,7 @@ module "ec2" {
   # Router VPC subnet
   router_public_subnet = module.vpc_router.public_subnet_id
 }
+
 
 module "vpn" {
   source = "./vpn"

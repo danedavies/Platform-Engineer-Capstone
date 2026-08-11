@@ -1,10 +1,10 @@
 ############################################
-# Bastion Security Group
+# Bastion Security Group (APP VPC)
 ############################################
 resource "aws_security_group" "bastion_sg" {
   name        = "${var.project_name}-bastion-sg"
   description = "Allow SSH to bastion host"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.app_vpc_id
 
   ingress {
     description = "SSH from anywhere"
@@ -29,7 +29,7 @@ resource "aws_security_group" "bastion_sg" {
 }
 
 ############################################
-# Bastion Host
+# Bastion Host (APP VPC)
 ############################################
 resource "aws_instance" "bastion" {
   ami                    = var.ami
@@ -49,12 +49,12 @@ resource "aws_instance" "bastion" {
 }
 
 ############################################
-# Private App Security Group (Node Exporter)
+# Private App Security Group (APP VPC)
 ############################################
 resource "aws_security_group" "private_app" {
   name        = "${var.project_name}-private-app-sg"
   description = "Allow Prometheus to scrape node_exporter"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.app_vpc_id
 
   ingress {
     description = "Node Exporter"
@@ -79,7 +79,7 @@ resource "aws_security_group" "private_app" {
 }
 
 ############################################
-# App Servers (Private)
+# App Servers (APP VPC)
 ############################################
 resource "aws_instance" "app1" {
   ami                    = var.ami
@@ -108,12 +108,12 @@ resource "aws_instance" "app2" {
 }
 
 ############################################
-# Prometheus Security Group
+# Prometheus Security Group (OBS VPC)
 ############################################
 resource "aws_security_group" "prometheus_sg" {
   name        = "${var.project_name}-prometheus-sg"
   description = "Allow bastion to access Prometheus UI"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.obs_vpc_id
 
   ingress {
     description = "Prometheus UI"
@@ -138,12 +138,12 @@ resource "aws_security_group" "prometheus_sg" {
 }
 
 ############################################
-# Grafana Security Group
+# Grafana Security Group (OBS VPC)
 ############################################
 resource "aws_security_group" "grafana_sg" {
   name        = "${var.project_name}-grafana-sg"
   description = "Allow bastion to access Grafana UI"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.obs_vpc_id
 
   ingress {
     description = "Grafana UI"
@@ -168,12 +168,12 @@ resource "aws_security_group" "grafana_sg" {
 }
 
 ############################################
-# Router Security Group
+# Router Security Group (ROUTER VPC)
 ############################################
 resource "aws_security_group" "router" {
   name        = "${var.project_name}-router-sg"
   description = "Allow SSH and routing traffic"
-  vpc_id      = var.vpc_id
+  vpc_id      = var.router_vpc_id
 
   ingress {
     description = "SSH from bastion"
@@ -183,7 +183,6 @@ resource "aws_security_group" "router" {
     security_groups = [aws_security_group.bastion_sg.id]
   }
 
-  # Router needs wide egress so it can forward traffic
   egress {
     from_port   = 0
     to_port     = 0
@@ -198,9 +197,8 @@ resource "aws_security_group" "router" {
   }
 }
 
-
 ############################################
-# Observability Stack
+# Observability Stack (OBS VPC)
 ############################################
 resource "aws_instance" "grafana" {
   ami                    = var.ami
@@ -229,7 +227,7 @@ resource "aws_instance" "prometheus" {
 }
 
 ############################################
-# Router Placeholder
+# Router Placeholder (ROUTER VPC)
 ############################################
 resource "aws_instance" "router_placeholder" {
   ami                    = var.ami
