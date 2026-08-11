@@ -23,7 +23,7 @@ resource "aws_vpn_connection" "app" {
 
   type = "ipsec.1"
 
-  statis_routes_only = false
+  static_routes_only = false
 
   tags = {
     Name = "${var.project_name}-app-vpn"
@@ -32,5 +32,5 @@ resource "aws_vpn_connection" "app" {
 
 resource "aws_vpn_gateway_route_propagation" "app" {
   vpn_gateway_id = aws_vpn_gateway.app.id
-  route_table_id = aws_route_table.private_rt.id
+  route_table_id = var.app_private_route_table_id
 }
