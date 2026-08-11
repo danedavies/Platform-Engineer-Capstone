@@ -81,6 +81,11 @@ jobs:
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
+      - name: Configure SSH known hosts
+        run: |
+          ssh-keyscan -H 34.205.85.247 >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
       - name: Test Ansible connectivity
         run: |
           ansible all \
@@ -142,6 +147,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+        
+      - name: Configure SSH known hosts
+        run: |
+          ssh-keyscan -H 34.205.85.247 >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
 
       - name: Apply configuration
         run: |
