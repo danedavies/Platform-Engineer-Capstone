@@ -81,6 +81,11 @@ jobs:
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
           chmod 600 ~/.ssh/capstonekey.pem  # Not our local capstone key!
 
+      - name: Configure SSH known hosts
+        run: |
+          ssh-keyscan -H 3.235.17.40 >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
       - name: Test Ansible connectivity
         run: |
           ansible all \
@@ -140,6 +145,13 @@ jobs:
       - name: Configure SSH / connection creds
         run: |
           mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        
+      - name: Configure SSH known hosts
+        run: |
+          ssh-keyscan -H 3.235.17.40 >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
           chmod 600 ~/.ssh/capstonekey.pem
 
