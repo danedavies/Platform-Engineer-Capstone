@@ -1,7 +1,7 @@
 # Platform Engineer Networking Capstone
 # Operating the Network as Code: Automating Configuration, Connectivity, and Change
 
-👥 ## Team
+## 👥 Team
 
 - Connor Klingensmith  
 - Corey Dorsey  
@@ -10,7 +10,7 @@
 
 ---
 
-📌 ##Overview
+## 📌 Overview
 
 This project demonstrates an end-to-end Network as Code and infrastructure automation workflow using AWS, Terraform, Ansible, Prometheus, Grafana, Git, GitHub, Linux and GitHub Actions.
 
@@ -20,7 +20,7 @@ The environment includes multiple VPCs, VPC peering, public and private subnets,
 
 ---
 
-🎯 ##Architecture
+## 🎯 Architecture
 
 The environment consists of three VPCs:
 
@@ -71,7 +71,7 @@ The router serves as the public entry point for the application and distributes 
 
 ---
 
-🌩️ ##Terraform Infrastructure
+## 🌩️ Terraform Infrastructure
 Terraform is responsible for provisioning and managing the AWS infrastructure.
 
 Terraform manages:
@@ -132,7 +132,7 @@ terraform/
 
 ---
 
-🛠️ ##Ansible - Configuration Management
+## 🛠️ Ansible - Configuration Management
 Ansible is used to configure the EC2 instances after the infrastructure is provisioned. Playbooks automate node_exporter installation, Prometheus deployment, Prometheus target configuration, Grafana deployment, Grafana datasource configuration, and Grafana dashboard provisioning.
 
 Dynamic inventory configuration:
@@ -140,7 +140,7 @@ Dynamic inventory configuration:
 ansible/inventory/aws_ec2.yml
 ```
 ---
-##AWS Dynamic Inventory
+## AWS Dynamic Inventory
 Ansible uses the AWS EC2 dynamic inventory plugin to automatically discover EC2 instances using AWS tags instead of relying on a manually maintained static inventory.
 
 Instances are grouped using their AWS Role tags.
@@ -155,7 +155,7 @@ router
 ```
 ---
 
-🏗️ ##Ansible Folder Structure
+## 🏗️ Ansible Folder Structure
 
 ```
 ├── ansible.cfg
@@ -224,10 +224,10 @@ router
             └── prometheus.yaml.j2
 ```
 ---
-📡 ##Monitoring and Observability
+## 📡 Monitoring and Observability
 The monitoring environment consists of Prometheus, Grafana, and node_exporter.
 
-##node_exporter
+## node_exporter
 node_exporter runs on monitored Linux infrastructure and exposes system metrics on:
 ```
 TCP Port 9100
@@ -240,7 +240,7 @@ Network traffic
 Filesystem usage
 Host availability
 
-##Prometheus
+## Prometheus
 Prometheus collects metrics from the configured node_exporter targets.
 
 Prometheus runs on:
@@ -248,7 +248,7 @@ Prometheus runs on:
 TCP Port 9090
 ```
 
-##Grafana
+## Grafana
 Grafana provides visualization for the metrics collected by Prometheus.
 
 Grafana runs on:
@@ -267,7 +267,7 @@ CPU usage
 - Network receive traffic
 - Network transmit traffic
 ---
-##Security
+## Security
 The project uses multiple layers of AWS network security.
 
 These include:
@@ -283,7 +283,7 @@ The private application servers are not directly exposed to the public internet.
 
 Public HTTP traffic enters through the router and is then forwarded to the private application servers.
 ---
-##Infrastructure as Code
+## Infrastructure as Code
 The AWS infrastructure is defined using Terraform.
 
 This provides:
@@ -301,7 +301,7 @@ terraform validate
 terraform plan
 ```
 ---
-##Configuration as Code
+## Configuration as Code
 Server configuration is managed through Ansible playbooks.
 
 Playbooks can be validated before execution using:
@@ -319,7 +319,7 @@ ansible-playbook ansible/playbooks/<playbook>.yml
 
 ---
 
-##Idempotency
+## Idempotency
 Ansible playbooks were tested for idempotency.
 
 After the desired configuration has already been applied, running the playbook again produces results such as:
@@ -332,7 +332,7 @@ This demonstrates that the automation does not unnecessarily modify resources th
 
 ---
 
-##CI/CD
+## CI/CD
 GitHub Actions workflow files are stored under:
 ```
 .github/workflows/
@@ -346,7 +346,7 @@ These workflows are intended to automate infrastructure and configuration valida
 
 ---
 
-##Repository Structure
+## Repository Structure
 ```
 ├── README.md
 │
@@ -451,7 +451,6 @@ These workflows are intended to automate infrastructure and configuration valida
         ├── outputs.tf
         └── variables.tf
 ```
-
 ---
 
 🚀 **CI/CD Pipeline**
@@ -486,7 +485,6 @@ The solution provides visibility into:
 - Validation checks and API polling results  
 
 This enables teams to detect failures, correct them through code, and re-run the workflow.
-
 ---
 
 🎬 **Final Demonstration Scenario**
