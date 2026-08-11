@@ -52,7 +52,7 @@ module "ec2" {
 
   # Observability VPC subnets
   obs_public_subnet  = module.vpc_obs.public_subnet_id
-  obs_private_subnet = module.vpc_obs.private_private_id
+  obs_private_subnet = module.vpc_obs.private_subnet_id
 
   # Router VPC subnet
   router_public_subnet = module.vpc_router.public_subnet_id
