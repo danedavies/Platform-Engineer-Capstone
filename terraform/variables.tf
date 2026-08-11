@@ -8,4 +8,7 @@ variable "project_name" {
   default = "platform-capstone"
 }
 
-variable "ami" { type = string }
+variable "ami" {
+   type = string
+   default = "ami-0c02fb55956c7d316"
+}
