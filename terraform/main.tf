@@ -51,7 +51,7 @@ resource "aws_route" "app_private_to_obs" {
 
 resource "aws_route" "obs_public_to_app" {
   route_table_id            = module.vpc_obs.public_route_table_id
-  destination_cidr_block    = module / vpc_app.vpc_cidr
+  destination_cidr_block    = module.vpc_app.vpc_cidr
   vpc_peering_connection_id = module.peering.app_obes_peering_id
 }
 
