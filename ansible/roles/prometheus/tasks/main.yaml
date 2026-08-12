@@ -23,7 +23,7 @@
     src: prometheus.yaml.j2
     dest: /etc/prometheus/prometheus.yaml
     mode: "0644"
-  notify: Restart prometheus
+  notify: Restart Prometheus
 
 - name: Run prometheus container
   community.docker.docker_container:
@@ -34,4 +34,4 @@
     ports:
       - 9090:9090
     volumes:
-      - /etc/prometheus/prometheus.yaml:/etc/prometheus.yaml:ro,z
+      - /etc/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro,z
