@@ -97,7 +97,7 @@ resource "aws_instance" "app1" {
   instance_type          = "t3.medium"
   subnet_id              = var.app_private_1
   vpc_security_group_ids = [aws_security_group.private_app.id]
-
+  key_name = "capstonekey"
   tags = {
     Name    = "${var.project_name}-app1"
     Project = "capstone"
@@ -110,7 +110,7 @@ resource "aws_instance" "app2" {
   instance_type          = "t3.medium"
   subnet_id              = var.app_private_2
   vpc_security_group_ids = [aws_security_group.private_app.id]
-
+  key_name = "capstonekey"
   tags = {
     Name    = "${var.project_name}-app2"
     Project = "capstone"
