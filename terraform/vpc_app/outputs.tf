@@ -21,3 +21,7 @@ output "private_2_id" {
 output "private_route_table_id" {
   value = aws_route_table.private_rt.id
 }
+
+output "public_route_table_id" {
+  value = aws_route_table.public_rt.id
+}
