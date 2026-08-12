@@ -9,7 +9,6 @@
 - David Altman
 
 ---
-
 ## 📌 Overview
 
 This project demonstrates an end-to-end Network as Code and infrastructure automation workflow using AWS, Terraform, Ansible, Prometheus, Grafana, Git, GitHub, Linux and GitHub Actions.
