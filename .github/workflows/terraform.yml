@@ -52,7 +52,7 @@ jobs:
 
       - name: Install tflint
         run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash -s -- v0.51.0
 
       - name: Terraform Format Check
         run: terraform fmt -check
