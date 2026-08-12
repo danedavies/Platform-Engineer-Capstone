@@ -29,9 +29,9 @@ module "peering" {
   obs_vpc_id    = module.vpc_obs.vpc_id
   router_vpc_id = module.vpc_router.vpc_id
 
-  app_private_rt_id    = module.vpc_app.private_rt_id
-  obs_private_rt_id    = module.vpc_obs.private_rt_id
-  router_public_rt_id  = module.vpc_router.public_rt_id
+  app_private_rt_id   = module.vpc_app.private_rt_id
+  obs_private_rt_id   = module.vpc_obs.private_rt_id
+  router_public_rt_id = module.vpc_router.public_rt_id
 
   app_cidr    = module.vpc_app.vpc_cidr
   obs_cidr    = module.vpc_obs.vpc_cidr
