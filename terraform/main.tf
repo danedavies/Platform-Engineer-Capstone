@@ -28,58 +28,6 @@ module "peering" {
   app_vpc_id    = module.vpc_app.vpc_id
   obs_vpc_id    = module.vpc_obs.vpc_id
   router_vpc_id = module.vpc_router.vpc_id
-
-  app_cidr    = module.vpc_app.vpc_cidr
-  obs_cidr    = module.vpc_obs.vpc_cidr
-  router_cidr = module.vpc_router.vpc_cidr
-}
-
-###############################
-# Peering Routes: app <--> obs
-###############################
-resource "aws_route" "app_public_to_obs" {
-  route_table_id            = module.vpc_app.public_route_table_id
-  destination_cidr_block    = module.vpc_obs.vpc_cidr
-  vpc_peering_connection_id = module.peering.app_obs_peering_id
-}
-
-resource "aws_route" "app_private_to_obs" {
-  route_table_id            = module.vpc_app.private_route_table_id
-  destination_cidr_block    = module.vpc_obs.vpc_cidr
-  vpc_peering_connection_id = module.peering.app_obs_peering_id
-}
-
-resource "aws_route" "obs_public_to_app" {
-  route_table_id            = module.vpc_obs.public_route_table_id
-  destination_cidr_block    = module.vpc_app.vpc_cidr
-  vpc_peering_connection_id = module.peering.app_obs_peering_id
-}
-
-resource "aws_route" "obs_private_to_app" {
-  route_table_id            = module.vpc_obs.private_route_table_id
-  destination_cidr_block    = module.vpc_app.vpc_cidr
-  vpc_peering_connection_id = module.peering.app_obs_peering_id
-}
-
-##################################
-# Peering Routes: app <--> router
-##################################
-resource "aws_route" "app_public_to_router" {
-  route_table_id            = module.vpc_app.public_route_table_id
-  destination_cidr_block    = module.vpc_router.vpc_cidr
-  vpc_peering_connection_id = module.peering.app_router_peering_id
-}
-
-resource "aws_route" "app_private_to_router" {
-  route_table_id            = module.vpc_app.private_route_table_id
-  destination_cidr_block    = module.vpc_router.vpc_cidr
-  vpc_peering_connection_id = module.peering.app_router_peering_id
-}
-
-resource "aws_route" "router_public_to_app" {
-  route_table_id            = module.vpc_router.public_route_table_id
-  destination_cidr_block    = module.vpc_app.vpc_cidr
-  vpc_peering_connection_id = module.peering.app_router_peering_id
 }
 
 module "ec2" {
@@ -106,12 +54,11 @@ module "ec2" {
   router_public_subnet = module.vpc_router.public_subnet_id
 }
 
-
 module "vpn" {
   source = "./vpn"
 
   app_vpc_id                 = module.vpc_app.vpc_id
-  app_private_route_table_id = module.vpc_app.private_route_table_id
+  app_private_route_table_id = module.vpc_app.private_rt_id
   router_public_ip           = module.ec2.router_public_ip
 
   router_bgp_asn = 65001
