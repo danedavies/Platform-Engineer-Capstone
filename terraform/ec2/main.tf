@@ -134,6 +134,14 @@ resource "aws_security_group" "prometheus_sg" {
     security_groups = [aws_security_group.bastion_sg.id]
   }
 
+  ingress {
+    description = "SSH from bastion"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -160,6 +168,14 @@ resource "aws_security_group" "grafana_sg" {
     description = "Grafana UI"
     from_port   = 3000
     to_port     = 3000
+    protocol    = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
+  ingress {
+    description = "SSH from bastion"
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     security_groups = [aws_security_group.bastion_sg.id]
   }
