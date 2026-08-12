@@ -216,6 +216,7 @@ resource "aws_instance" "grafana" {
   instance_type          = "t3.medium"
   subnet_id              = var.obs_public_subnet
   vpc_security_group_ids = [aws_security_group.grafana_sg.id]
+  key_name = "capstonekey"
 
   tags = {
     Name    = "${var.project_name}-grafana"
@@ -229,7 +230,7 @@ resource "aws_instance" "prometheus" {
   instance_type          = "t3.medium"
   subnet_id              = var.obs_private_subnet
   vpc_security_group_ids = [aws_security_group.prometheus_sg.id]
-
+  key_name = "capstonekey"
   tags = {
     Name    = "${var.project_name}-prometheus"
     Project = "capstone"
@@ -245,7 +246,7 @@ resource "aws_instance" "router_placeholder" {
   instance_type          = "t3.medium"
   subnet_id              = var.router_public_subnet
   vpc_security_group_ids = [aws_security_group.router.id]
-
+  key_name = "capstonekey"
   associate_public_ip_address = true
   source_dest_check           = false
 
