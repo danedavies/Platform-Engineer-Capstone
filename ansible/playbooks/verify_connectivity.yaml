@@ -13,7 +13,7 @@
   become: true
 
   vars:
-    private_ip: "{{ groups['tag_Role_private_app'] first }}"
+    private_ip: "{{ groups['tag_Role_private_app'] | first }}"
 
   tasks:
     - name: Add local.batabase.app to /etv/hosts

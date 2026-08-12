@@ -12,11 +12,11 @@
 
 ## 📌 Overview
 
-This project demonstrates an end-to-end Network as Code and infrastructure automation workflow using AWS, Terraform, Ansible, Prometheus, Grafana, Git, GitHub, Linux and GitHub Actions.
+This project demonstrates an end-to-end Network as Code and infrastructure automation workflow using AWS, Terraform, Ansible, Docker, Prometheus, Grafana, Git, GitHub, Linux and GitHub Actions.
 
 Terraform is used to provision and manage the AWS networking infrastructure, while Ansible configures the hosts and deploys application and monitoring services.
 
-The environment includes multiple VPCs, VPC peering, public and private subnets, routing, security groups, a NAT gateway, Linux EC2 instances, and monitoring.
+The environment includes multiple VPCs, VPC peering, public and private subnets, routing, security groups, a NAT gateway, Linux EC2 instances, containerized applications, and monitoring.
 
 ---
 
@@ -37,6 +37,7 @@ Bastion host
 Two private application servers
 Public and private subnets
 NAT Gateway
+Dockerized application containers
 
 **VPC 2 - Observability**
 
@@ -131,7 +132,6 @@ terraform/
 ```
 
 ---
-
 ## 🛠️ Ansible - Configuration Management
 Ansible is used to configure the EC2 instances after the infrastructure is provisioned. Playbooks automate node_exporter installation, Prometheus deployment, Prometheus target configuration, Grafana deployment, Grafana datasource configuration, and Grafana dashboard provisioning.
 

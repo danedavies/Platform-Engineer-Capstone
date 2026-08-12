@@ -29,10 +29,15 @@ module "peering" {
   obs_vpc_id    = module.vpc_obs.vpc_id
   router_vpc_id = module.vpc_router.vpc_id
 
+  app_private_rt_id   = module.vpc_app.private_rt_id
+  obs_private_rt_id   = module.vpc_obs.private_rt_id
+  router_public_rt_id = module.vpc_router.public_rt_id
+
   app_cidr    = module.vpc_app.vpc_cidr
   obs_cidr    = module.vpc_obs.vpc_cidr
   router_cidr = module.vpc_router.vpc_cidr
 }
+
 
 module "ec2" {
   source = "./ec2"
@@ -58,12 +63,11 @@ module "ec2" {
   router_public_subnet = module.vpc_router.public_subnet_id
 }
 
-
 module "vpn" {
   source = "./vpn"
 
   app_vpc_id                 = module.vpc_app.vpc_id
-  app_private_route_table_id = module.vpc_app.private_route_table_id
+  app_private_route_table_id = module.vpc_app.private_rt_id
   router_public_ip           = module.ec2.router_public_ip
 
   router_bgp_asn = 65001
