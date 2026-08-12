@@ -70,8 +70,8 @@ resource "aws_route" "app_public_to_router" {
   vpc_peering_connection_id = module.peering.app_router_peering_id
 }
 
-resource "aws_route" "app_private_to_route" {
-  route_table_id            = module.vpc_app.rivate_route_table_id
+resource "aws_route" "app_private_to_router" {
+  route_table_id            = module.vpc_app.private_route_table_id
   destination_cidr_block    = module.vpc_router.vpc_cidr
   vpc_peering_connection_id = module.peering.app_router_peering_id
 }
