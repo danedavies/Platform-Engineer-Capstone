@@ -1,24 +1,25 @@
 ---
 - name: Configure application servers
-  hosts: ip-address
+  hosts: tag_Role_private_app
   become: true
 
   roles:
     - node_exporter
 
 - name: Configure Prometheus
-  hosts: prometheus
+  hosts: tag_Role_prometheus
   become: true
 
   roles:
     - prometheus
 
 - name: Configure Grafana
-  hosts: grafana
+  hosts: tag_Role_grafana
   become: true
 
   roles:
     - grafana
+
 - name: Verify connectivity playbook
   import_playbook: verify_connectivity.yaml
 
