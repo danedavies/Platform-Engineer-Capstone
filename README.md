@@ -3,7 +3,7 @@
 
 ## 👥 Team
 
-- Connor Klingensmith  
+- Conner Klingensmith  
 - Corey Dorsey  
 - Dane Davies  
 - David Altman
