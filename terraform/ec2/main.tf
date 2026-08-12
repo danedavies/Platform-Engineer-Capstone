@@ -53,9 +53,19 @@ resource "aws_instance" "bastion" {
 ############################################
 resource "aws_security_group" "private_app" {
   name        = "${var.project_name}-private-app-sg"
-  description = "Allow Prometheus to scrape node_exporter"
+  description = "Allow Prometheus and Bastion access to private app servers"
   vpc_id      = var.app_vpc_id
 
+  # NEW: SSH from Bastion SG
+  ingress {
+    description = "SSH from bastion"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
+  # Existing: Node Exporter
   ingress {
     description = "Node Exporter"
     from_port   = 9100
@@ -78,6 +88,7 @@ resource "aws_security_group" "private_app" {
   }
 }
 
+
 ############################################
 # App Servers (APP VPC)
 ############################################
@@ -86,7 +97,7 @@ resource "aws_instance" "app1" {
   instance_type          = "t3.medium"
   subnet_id              = var.app_private_1
   vpc_security_group_ids = [aws_security_group.private_app.id]
-
+  key_name = "capstonekey"
   tags = {
     Name    = "${var.project_name}-app1"
     Project = "capstone"
@@ -99,7 +110,7 @@ resource "aws_instance" "app2" {
   instance_type          = "t3.medium"
   subnet_id              = var.app_private_2
   vpc_security_group_ids = [aws_security_group.private_app.id]
-
+  key_name = "capstonekey"
   tags = {
     Name    = "${var.project_name}-app2"
     Project = "capstone"
@@ -221,6 +232,7 @@ resource "aws_instance" "grafana" {
   instance_type          = "t3.medium"
   subnet_id              = var.obs_public_subnet
   vpc_security_group_ids = [aws_security_group.grafana_sg.id]
+  key_name = "capstonekey"
 
   tags = {
     Name    = "${var.project_name}-grafana"
@@ -234,7 +246,7 @@ resource "aws_instance" "prometheus" {
   instance_type          = "t3.medium"
   subnet_id              = var.obs_private_subnet
   vpc_security_group_ids = [aws_security_group.prometheus_sg.id]
-
+  key_name = "capstonekey"
   tags = {
     Name    = "${var.project_name}-prometheus"
     Project = "capstone"
@@ -250,7 +262,7 @@ resource "aws_instance" "router_placeholder" {
   instance_type          = "t3.medium"
   subnet_id              = var.router_public_subnet
   vpc_security_group_ids = [aws_security_group.router.id]
-
+  key_name = "capstonekey"
   associate_public_ip_address = true
   source_dest_check           = false
 
