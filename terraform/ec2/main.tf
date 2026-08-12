@@ -53,9 +53,19 @@ resource "aws_instance" "bastion" {
 ############################################
 resource "aws_security_group" "private_app" {
   name        = "${var.project_name}-private-app-sg"
-  description = "Allow Prometheus to scrape node_exporter"
+  description = "Allow Prometheus and Bastion access to private app servers"
   vpc_id      = var.app_vpc_id
 
+  # NEW: SSH from Bastion SG
+  ingress {
+    description = "SSH from bastion"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
+
+  # Existing: Node Exporter
   ingress {
     description = "Node Exporter"
     from_port   = 9100
@@ -77,6 +87,7 @@ resource "aws_security_group" "private_app" {
     Role    = "private_app"
   }
 }
+
 
 ############################################
 # App Servers (APP VPC)
