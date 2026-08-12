@@ -13,3 +13,26 @@ variable "router_vpc_id" {
   type        = string
 }
 
+variable "app_private_rt_id" {
+  type = string
+}
+
+variable "obs_private_rt_id" {
+  type = string
+}
+
+variable "router_public_rt_id" {
+  type = string
+}
+
+variable "app_cidr" {
+  type = string
+}
+
+variable "obs_cidr" {
+  type = string
+}
+
+variable "router_cidr" {
+  type = string
+}
