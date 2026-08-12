@@ -24,7 +24,7 @@
 
 - name: Write Prometheus datasource provisioning
   ansible.builtin.template:
-    src: datasource.yml.j2
+    src: datasource.yaml.j2
     dest: /etc/grafana/provisioning/datasources/prometheus.yml
     mode: "0644"
   notify: Restart grafana
