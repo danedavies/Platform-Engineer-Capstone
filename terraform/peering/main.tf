@@ -29,34 +29,19 @@ resource "aws_vpc_peering_connection" "app_router" {
 ########################################
 
 # App private → Obs (force route)
-resource "aws_route" "app_private_to_obs_force" {
+resource "aws_route" "app_private_to_obs" {
   route_table_id            = var.app_private_rt_id
   destination_cidr_block    = var.obs_cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.app_obs.id
-
-  lifecycle {
-    create_before_destroy = true
-    replace_triggered_by = [
-      aws_vpc_peering_connection.app_obs.id
-    ]
-  }
 }
 
 
 # Obs private → App (force route)
-resource "aws_route" "obs_private_to_app_force" {
+resource "aws_route" "obs_private_to_app" {
   route_table_id            = var.obs_private_rt_id
   destination_cidr_block    = var.app_cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.app_obs.id
-
-  lifecycle {
-    create_before_destroy = true
-    replace_triggered_by = [
-      aws_vpc_peering_connection.app_obs.id
-    ]
-  }
 }
-
 
 ########################################
 # Peering Routes: App <--> Router
