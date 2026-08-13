@@ -33,6 +33,8 @@ module "peering" {
   obs_private_rt_id   = module.vpc_obs.private_rt_id
   router_public_rt_id = module.vpc_router.public_rt_id
 
+  app_public_rt_id = module.vpc_app.public_rt_id
+
   app_cidr    = module.vpc_app.vpc_cidr
   obs_cidr    = module.vpc_obs.vpc_cidr
   router_cidr = module.vpc_router.vpc_cidr

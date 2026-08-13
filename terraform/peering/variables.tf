@@ -36,3 +36,7 @@ variable "obs_cidr" {
 variable "router_cidr" {
   type = string
 }
+
+variable "app_public_rt_id" {
+  type = string
+}
