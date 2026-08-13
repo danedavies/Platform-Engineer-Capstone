@@ -215,7 +215,7 @@ resource "aws_security_group" "router" {
     from_port = 22 
     to_port = 22
     protocol = "tcp"
-    security_groups = ["${aws_instance.bastion.public_ip}/32"]
+    cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
   }
 
   egress {
