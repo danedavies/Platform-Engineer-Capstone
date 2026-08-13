@@ -210,6 +210,14 @@ resource "aws_security_group" "router" {
     security_groups = [aws_security_group.bastion_sg.id]
   }
 
+  ingress {
+    description = "SSH from bastion Public IP"
+    from_port = 22 
+    to_port = 22
+    protocol = "tcp"
+    security_groups = ["${aws_instance.bastion.public_ip}/32"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
