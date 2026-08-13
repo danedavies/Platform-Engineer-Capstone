@@ -44,7 +44,7 @@ module "ec2" {
   source = "./ec2"
 
   project_name = var.project_name
-  ami          = var.ami
+  ami          = data.aws_ami.al2023.id
 
   # VPC IDs
   app_vpc_id    = module.vpc_app.vpc_id
@@ -445,4 +445,13 @@ module "iam" {
   source      = "./iam"
   user_name   = "platform-capstone"
   bucket_name = "platform-capstone-bucket"
+}
+data "aws_ami" "al2023" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-x86_64"]
+  }
 }
