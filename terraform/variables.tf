@@ -10,5 +10,5 @@ variable "project_name" {
 
 variable "ami" {
   type    = string
-  default = "ami-0c02fb55956c7d316"
+  default = data.aws_ami.al2023.id
 }
