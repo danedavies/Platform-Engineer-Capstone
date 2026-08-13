@@ -83,7 +83,7 @@ jobs:
 
       - name: Configure SSH known hosts
         run: |
-          ssh-keyscan -H 32.197.184.41 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 3.228.2.144 >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       # - name: Test SSH and Python
@@ -207,41 +207,43 @@ jobs:
       #           /usr/local/bin/python3.11 --version
       #         fi
       #       '
-      # - name: Ensure Python 3.12 is installed on all Linux nodes
-      #   run: |
-      #     ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
-      #       -i ansible/inventory/staging/hosts.yml \
-      #       -m ansible.builtin.raw \
-      #       -a '
-      #         if [ -x /usr/bin/python3.12 ]; then
-      #           echo "Python 3.12 is already installed"
-      #           /usr/local/bin/python3.12 --version
-      #         else
-      #           echo "Python 3.12 not found - installing Python 3.12.13"
+      #- name: Ensure Python 3.12 is installed on all Linux nodes
+      #  run: |
+      #    ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
+      #      -i ansible/inventory/staging/hosts.yml \
+      #      -m ansible.builtin.raw \
+      #      -a '
+      #        if [ -x /usr/local/bin/python3.12 ]; then
+      #         echo "Python 3.12 is already installed"
+      #          /usr/local/bin/python3.21 --version
+      #        else
+      #          echo "Python 3.12 not found - installing Python 3.12"
+      
+      #          sudo yum groupinstall "Development Tools" -y
+       #         sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
 
-      #           sudo yum groupinstall "Development Tools" -y
-      #           sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
 
-      #           cd /tmp
 
-      #           if [ ! -f Python-3.12.13.tgz ]; then
-      #             wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
-      #           fi
+        #        cd /tmp
 
-      #           if [ ! -d Python-3.12.13 ]; then
-      #             tar -xzf Python-3.12.13.tgz
-      #           fi
+          #      if [ ! -f Python-3.11.15.tgz ]; then
+          #        wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+          #      fi
 
-      #           cd Python-3.12.13
+          #      if [ ! -d Python-3.11.15 ]; then
+          #        tar -xzf Python-3.11.15.tgz
+          #      fi
 
-      #           ./configure
-      #           make -j$(nproc)
-      #           sudo make altinstall
+          #      cd Python-3.11.15
 
-      #           echo "Python installation complete"
-      #           /usr/bin/python3.12 --version
-      #         fi
-      #       '
+          #      ./configure
+          #      make -j$(nproc)
+          #      sudo make altinstall
+
+          #      echo "Python installation complete"
+          #     /usr/local/bin/python3.11 --version
+          #    fi
+          #  '
 
       - name: Test Ansible connectivity
         run: |
@@ -307,7 +309,7 @@ jobs:
         
       - name: Configure SSH known hosts
         run: |
-          ssh-keyscan -H 32.197.184.41 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 3.228.2.144 >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
           chmod 600 ~/.ssh/capstonekey.pem
@@ -353,41 +355,41 @@ jobs:
       #           /usr/local/bin/python3.11 --version
       #         fi
       #       '
-      # - name: Ensure Python 3.12 is installed on all Linux nodes
-      #   run: |
-      #     ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
-      #       -i ansible/inventory/staging/hosts.yml \
-      #       -m ansible.builtin.raw \
-      #       -a '
-      #         if [ -x /usr/bin/python3.12 ]; then
-      #           echo "Python 3.12 is already installed"
-      #           /usr/local/bin/python3.12 --version
-      #         else
-      #           echo "Python 3.12 not found - installing Python 3.12.13"
+      #- name: Ensure Python 3.12 is installed on all Linux nodes
+      #  run: |
+      #    ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
+      #      -i ansible/inventory/staging/hosts.yml \
+      #      -m ansible.builtin.raw \
+      #      -a '
+      #        if [ -x /usr/local/bin/python3.12 ]; then
+      #          echo "Python 3.12 is already installed"
+      #          /usr/local/bin/python3.12 --version
+      #        else
+      #          echo "Python 3.12 not found - installing Python 3.12"
 
-      #           sudo yum groupinstall "Development Tools" -y
-      #           sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+      #          sudo yum groupinstall "Development Tools" -y
+      #          sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
 
-      #           cd /tmp
+      #          cd /tmp
 
-                # if [ ! -f Python-3.12.13.tgz ]; then
-                #   wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
-                # fi
+      #         if [ ! -f Python-3.12.tgz ]; then
+      #            wget https://www.python.org/ftp/python/3.12/Python-3.12.tgz
+      #          fi
 
-      #           if [ ! -d Python-3.12.13 ]; then
-      #             tar -xzf Python-3.12.13.tgz
-      #           fi
+      #          if [ ! -d Python-3.12 ]; then
+      #            tar -xzf Python-3.12.tgz
+      #          fi
 
-      #           cd Python-3.12.13
+      #          cd Python-3.12
 
-      #           ./configure
-      #           make -j$(nproc)
-      #           sudo make altinstall
+      #          ./configure
+      #          make -j$(nproc)
+      #          sudo make altinstall
 
-      #           echo "Python installation complete"
-      #           /usr/bin/python3.12 --version
-      #         fi
-      #       '
+      #          echo "Python installation complete"
+      #          /usr/local/bin/python3.12 --version
+      #        fi
+      #      '
 
       # One off to test if key is malformed
       - name: Debug key file integrity (no secret contents printed)

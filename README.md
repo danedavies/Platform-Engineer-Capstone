@@ -66,7 +66,7 @@ Contains:
 Router
 Public Subnet
 Internet Gateway
-Route Table
+Route Table 
 
 The router serves as the public entry point for the application and distributes HTTP requests between the two private application servers.
 
@@ -132,6 +132,7 @@ terraform/
 ```
 
 ---
+
 ## 🛠️ Ansible - Configuration Management
 Ansible is used to configure the EC2 instances after the infrastructure is provisioned. Playbooks automate node_exporter installation, Prometheus deployment, Prometheus target configuration, Grafana deployment, Grafana datasource configuration, and Grafana dashboard provisioning.
 
