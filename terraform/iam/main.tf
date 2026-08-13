@@ -27,6 +27,6 @@ resource "aws_iam_policy" "user_basic_access" {
 }
 
 resource "aws_iam_user_policy_attachment" "attach_basic_access" {
-  user       = aws_iam_user.platform-capstone.name
+  user       = aws_iam_user.platform_capstone.name
   policy_arn = aws_iam_policy.user_basic_access.arn
 }
