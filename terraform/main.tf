@@ -80,7 +80,7 @@ module "vpn" {
 ########################
 # APP VPC NACL
 ########################
-
+/*
 resource "aws_network_acl" "app_acl" {
   vpc_id = module.vpc_app.vpc_id
 
@@ -436,7 +436,7 @@ resource "aws_network_acl_rule" "router_outbound_ephemeral_to_app" {
   from_port      = 1024
   to_port        = 65535
 }
-
+*/
 ########################
 # IAM MODULE
 ########################
