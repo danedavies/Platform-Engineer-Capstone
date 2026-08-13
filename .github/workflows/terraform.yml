@@ -50,9 +50,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Install tflint
+      - name: Install TFLint
         run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          curl -sSL https://github.com/terraform-linters/tflint/releases/download/v0.51.0/tflint_linux_amd64.zip -o tflint.zip
+          unzip tflint.zip
+          sudo mv tflint /usr/local/bin/
 
       - name: Terraform Format Check
         run: terraform fmt -check

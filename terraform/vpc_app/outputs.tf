@@ -18,6 +18,10 @@ output "private_2_id" {
   value = aws_subnet.private_2.id
 }
 
-output "private_route_table_id" {
+output "private_rt_id" {
   value = aws_route_table.private_rt.id
+}
+
+output "public_rt_id" {
+  value = aws_route_table.public_rt.id
 }

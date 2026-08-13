@@ -83,44 +83,167 @@ jobs:
 
       - name: Configure SSH known hosts
         run: |
-          ssh-keyscan -H 44.200.214.174 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 3.228.2.144 >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Ensure Python 3.11 is installed on bastion
-        run: |
-          ansible bastion_staging \
-            -i ansible/inventory/staging/hosts.yml \
-            -m ansible.builtin.raw \
-            -a '
-              if [ -x /usr/local/bin/python3.11 ]; then
-                echo "Python 3.11 is already installed"
-                /usr/local/bin/python3.11 --version
-              else
-                echo "Python 3.11 not found - installing Python 3.11.15"
+      # - name: Test SSH and Python
+      #   run: |
+      #     ssh -i ~/.ssh/capstonekey.pem ec2-user@32.197.184.41 "command -v python3; python3 --version"
+      #     ssh -i ~/.ssh/capstonekey.pem ec2-user@32.197.184.41
+      #     "/usr/bin/python3 -c 'import json; print(json.dumps({"test":"ok"}))'"
+            
+
+      # - name: Ensure Python 3.11 is installed on bastion
+      #   run: |
+      #     ansible bastion_staging \
+      #       -i ansible/inventory/staging/hosts.yml \
+      #       -m ansible.builtin.raw \
+      #       -a '
+      #         if [ -x /usr/local/bin/python3.11 ]; then
+      #           echo "Python 3.11 is already installed"
+      #           /usr/local/bin/python3.11 --version
+      #         else
+      #           echo "Python 3.11 not found - installing Python 3.11.15"
         
-                sudo yum groupinstall "Development Tools" -y
-                sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+      #           sudo yum groupinstall "Development Tools" -y
+      #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
         
-                cd /tmp
+      #           cd /tmp
         
-                if [ ! -f Python-3.11.15.tgz ]; then
-                  wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
-                fi
+      #           if [ ! -f Python-3.11.15.tgz ]; then
+      #             wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+      #           fi
         
-                if [ ! -d Python-3.11.15 ]; then
-                  tar -xzf Python-3.11.15.tgz
-                fi
+      #           if [ ! -d Python-3.11.15 ]; then
+      #             tar -xzf Python-3.11.15.tgz
+      #           fi
         
-                cd Python-3.11.15
+      #           cd Python-3.11.15
         
-                ./configure --enable-optimizations
-                make -j$(nproc)
-                sudo make altinstall
+      #           ./configure --enable-optimizations
+      #           make -j$(nproc)
+      #           sudo make altinstall
         
-                echo "Python installation complete"
-                /usr/local/bin/python3.11 --version
-              fi
-            '
+      #           echo "Python installation complete"
+      #           /usr/local/bin/python3.11 --version
+      #         fi
+      #       '
+      # - name: Ensure Python 3.11 is installed on app servers
+      #   run: |
+      #     ansible 'app_staging_1:app_staging_2' \
+      #       -i ansible/inventory/staging/hosts.yml \
+      #       -m ansible.builtin.raw \
+      #       -a '
+      #         if [ -x /usr/local/bin/python3.11 ]; then
+      #           echo "Python 3.11 is already installed"
+      #           /usr/local/bin/python3.11 --version
+      #         else
+      #           echo "Python 3.11 not found - installing Python 3.11.15"
+          
+      #           sudo yum groupinstall "Development Tools" -y
+      #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+          
+      #           cd /tmp
+          
+      #           if [ ! -f Python-3.11.15.tgz ]; then
+      #             wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+      #           fi
+          
+      #           if [ ! -d Python-3.11.15 ]; then
+      #             tar -xzf Python-3.11.15.tgz
+      #           fi
+          
+      #           cd Python-3.11.15
+          
+      #           ./configure --enable-optimizations
+      #           make -j$(nproc)
+      #           sudo make altinstall
+          
+      #           echo "Python installation complete"
+      #           /usr/local/bin/python3.11 --version
+      #           fi
+      #         '
+      # - name: Ensure Python 3.11 is installed on Prometheus
+      #   run: |
+      #     ansible prometheus_staging \
+      #       -i ansible/inventory/staging/hosts.yml \
+      #       -m ansible.builtin.raw \
+      #       -a '
+      #         if [ -x /usr/local/bin/python3.11 ]; then
+      #           echo "Python 3.11 is already installed"
+      #           /usr/local/bin/python3.11 --version
+      #         else
+      #           sudo yum groupinstall "Development Tools" -y
+      #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+      #           cd /tmp
+      #           [ -f Python-3.11.15.tgz ] || wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+      #           [ -d Python-3.11.15 ] || tar -xzf Python-3.11.15.tgz
+      #           cd Python-3.11.15
+      #           ./configure --enable-optimizations
+      #           make -j$(nproc)
+      #           sudo make altinstall
+      #           /usr/local/bin/python3.11 --version
+      #         fi
+      #       '
+      # - name: Ensure Python 3.11 is installed on Grafana
+      #   run: |
+      #     ansible grafana_staging \
+      #       -i ansible/inventory/staging/hosts.yml \
+      #       -m ansible.builtin.raw \
+      #       -a '
+      #         if [ -x /usr/local/bin/python3.11 ]; then
+      #           echo "Python 3.11 is already installed"
+      #           /usr/local/bin/python3.11 --version
+      #         else
+      #           sudo yum groupinstall "Development Tools" -y
+      #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+      #           cd /tmp
+      #           [ -f Python-3.11.15.tgz ] || wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+      #           [ -d Python-3.11.15 ] || tar -xzf Python-3.11.15.tgz
+      #           cd Python-3.11.15
+      #           ./configure --enable-optimizations
+      #           make -j$(nproc)
+      #           sudo make altinstall
+      #           /usr/local/bin/python3.11 --version
+      #         fi
+      #       '
+      #- name: Ensure Python 3.12 is installed on all Linux nodes
+      #  run: |
+      #    ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
+      #      -i ansible/inventory/staging/hosts.yml \
+      #      -m ansible.builtin.raw \
+      #      -a '
+      #        if [ -x /usr/local/bin/python3.12 ]; then
+      #         echo "Python 3.12 is already installed"
+      #          /usr/local/bin/python3.21 --version
+      #        else
+      #          echo "Python 3.12 not found - installing Python 3.12"
+      
+      #          sudo yum groupinstall "Development Tools" -y
+       #         sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+
+
+
+        #        cd /tmp
+
+          #      if [ ! -f Python-3.11.15.tgz ]; then
+          #        wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+          #      fi
+
+          #      if [ ! -d Python-3.11.15 ]; then
+          #        tar -xzf Python-3.11.15.tgz
+          #      fi
+
+          #      cd Python-3.11.15
+
+          #      ./configure
+          #      make -j$(nproc)
+          #      sudo make altinstall
+
+          #      echo "Python installation complete"
+          #     /usr/local/bin/python3.11 --version
+          #    fi
+          #  '
 
       - name: Test Ansible connectivity
         run: |
@@ -186,46 +309,88 @@ jobs:
         
       - name: Configure SSH known hosts
         run: |
-          ssh-keyscan -H 44.200.214.174 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 3.228.2.144 >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
           chmod 600 ~/.ssh/capstonekey.pem
+
+      # - name: Test SSH and Python
+      #   run: |
+      #     ssh -i ~/.ssh/capstonekey.pem ec2-user@32.197.184.41 "command -v python3; python3 --version"
+      #     ssh -i ~/.ssh/capstonekey.pem ec2-user@32.197.184.41
+      #     "/usr/bin/python3 -c 'import json; print(json.dumps({"test":"ok"}))'"
           
-      - name: Ensure Python 3.11 is installed on bastion
-        run: |
-          ansible bastion_staging \
-            -i ansible/inventory/staging/hosts.yml \
-            -m ansible.builtin.raw \
-            -a '
-              if [ -x /usr/local/bin/python3.11 ]; then
-                echo "Python 3.11 is already installed"
-                /usr/local/bin/python3.11 --version
-              else
-                echo "Python 3.11 not found - installing Python 3.11.15"
+      # - name: Ensure Python 3.11 is installed on bastion
+      #   run: |
+      #     ansible bastion_staging \
+      #       -i ansible/inventory/staging/hosts.yml \
+      #       -m ansible.builtin.raw \
+      #       -a '
+      #         if [ -x /usr/local/bin/python3.11 ]; then
+      #           echo "Python 3.11 is already installed"
+      #           /usr/local/bin/python3.11 --version
+      #         else
+      #           echo "Python 3.11 not found - installing Python 3.11.15"
           
-                sudo yum groupinstall "Development Tools" -y
-                sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+      #           sudo yum groupinstall "Development Tools" -y
+      #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
           
-                cd /tmp
+      #           cd /tmp
           
-                if [ ! -f Python-3.11.15.tgz ]; then
-                  wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
-                fi
+      #           if [ ! -f Python-3.11.15.tgz ]; then
+      #             wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+      #           fi
           
-                if [ ! -d Python-3.11.15 ]; then
-                  tar -xzf Python-3.11.15.tgz
-                fi
+      #           if [ ! -d Python-3.11.15 ]; then
+      #             tar -xzf Python-3.11.15.tgz
+      #           fi
           
-                cd Python-3.11.15
+      #           cd Python-3.11.15
           
-                ./configure --enable-optimizations
-                make -j$(nproc)
-                sudo make altinstall
+      #           ./configure --enable-optimizations
+      #           make -j$(nproc)
+      #           sudo make altinstall
           
-                echo "Python installation complete"
-                /usr/local/bin/python3.11 --version
-              fi
-            '
+      #           echo "Python installation complete"
+      #           /usr/local/bin/python3.11 --version
+      #         fi
+      #       '
+      #- name: Ensure Python 3.12 is installed on all Linux nodes
+      #  run: |
+      #    ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
+      #      -i ansible/inventory/staging/hosts.yml \
+      #      -m ansible.builtin.raw \
+      #      -a '
+      #        if [ -x /usr/local/bin/python3.12 ]; then
+      #          echo "Python 3.12 is already installed"
+      #          /usr/local/bin/python3.12 --version
+      #        else
+      #          echo "Python 3.12 not found - installing Python 3.12"
+
+      #          sudo yum groupinstall "Development Tools" -y
+      #          sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+
+      #          cd /tmp
+
+      #         if [ ! -f Python-3.12.tgz ]; then
+      #            wget https://www.python.org/ftp/python/3.12/Python-3.12.tgz
+      #          fi
+
+      #          if [ ! -d Python-3.12 ]; then
+      #            tar -xzf Python-3.12.tgz
+      #          fi
+
+      #          cd Python-3.12
+
+      #          ./configure
+      #          make -j$(nproc)
+      #          sudo make altinstall
+
+      #          echo "Python installation complete"
+      #          /usr/local/bin/python3.12 --version
+      #        fi
+      #      '
+
       # One off to test if key is malformed
       - name: Debug key file integrity (no secret contents printed)
         run: |
