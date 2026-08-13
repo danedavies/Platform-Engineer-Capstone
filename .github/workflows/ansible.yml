@@ -202,7 +202,7 @@ jobs:
       #       '
       - name: Ensure Python 3.11 is installed on all Linux nodes
         run: |
-          ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging' \
+          ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
             -i ansible/inventory/staging/hosts.yml \
             -m ansible.builtin.raw \
             -a '
@@ -342,7 +342,7 @@ jobs:
       #       '
       - name: Ensure Python 3.11 is installed on all Linux nodes
         run: |
-          ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging' \
+          ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
             -i ansible/inventory/staging/hosts.yml \
             -m ansible.builtin.raw \
             -a '
