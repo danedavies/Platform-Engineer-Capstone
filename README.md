@@ -132,6 +132,7 @@ terraform/
 ```
 
 ---
+
 ## 🛠️ Ansible - Configuration Management
 Ansible is used to configure the EC2 instances after the infrastructure is provisioned. Playbooks automate node_exporter installation, Prometheus deployment, Prometheus target configuration, Grafana deployment, Grafana datasource configuration, and Grafana dashboard provisioning.
 
