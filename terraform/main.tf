@@ -195,6 +195,50 @@ resource "aws_network_acl_rule" "app_outbound_https" {
   to_port        = 443
 }
 
+resource "aws_network_acl_rule" "app_outbound_http" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 170
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 80
+  to_port        = 80
+}
+
+resource "aws_network_acl_rule" "app_outbound_dns" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 180
+  egress         = true
+  protocol       = "udp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 53
+  to_port        = 53
+}
+
+resource "aws_network_acl_rule" "app_inbound_ephemeral_internet" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 190
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "app_inbound_ephemeral_udp_internet" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 200
+  egress         = false
+  protocol       = "udp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
 # Outbound SSH to OBS
 resource "aws_network_acl_rule" "app_outbound_ssh_to_obs" {
   network_acl_id = aws_network_acl.app_acl.id
@@ -286,6 +330,6 @@ resource "aws_network_acl_rule" "router_outbound_ssh_to_app" {
   protocol       = "tcp"
   rule_action    = "allow"
   cidr_block     = module.vpc_app.vpc_cidr
-  from_port      = 22
-  to_port        = 22
+  from_port      = 1024
+  to_port        = 65535
 }
