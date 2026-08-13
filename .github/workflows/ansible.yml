@@ -213,7 +213,9 @@ jobs:
                 echo "Python 3.11 not found - installing Python 3.11.15"
 
                 sudo yum groupinstall "Development Tools" -y
-                sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+                sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+
+
 
                 cd /tmp
 
@@ -353,7 +355,7 @@ jobs:
                 echo "Python 3.11 not found - installing Python 3.11.15"
 
                 sudo yum groupinstall "Development Tools" -y
-                sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+                sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
 
                 cd /tmp
 
