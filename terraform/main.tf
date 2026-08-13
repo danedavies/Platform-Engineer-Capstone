@@ -209,3 +209,8 @@ resource "aws_network_acl_rule" "router_outbound_ssh_to_app" {
   from_port      = 22
   to_port        = 22
 }
+module "iam" {
+  source      = "./iam"
+  user_name   = "platform-capstone"
+  bucket_name = "platform-capstone-bucket"
+}
