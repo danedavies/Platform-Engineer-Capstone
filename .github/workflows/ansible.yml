@@ -202,7 +202,7 @@ jobs:
       #       '
       - name: Ensure Python 3.11 is installed on all Linux nodes
         run: |
-          ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging' \
+          ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
             -i ansible/inventory/staging/hosts.yml \
             -m ansible.builtin.raw \
             -a '
@@ -213,7 +213,9 @@ jobs:
                 echo "Python 3.11 not found - installing Python 3.11.15"
 
                 sudo yum groupinstall "Development Tools" -y
-                sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+                sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+
+
 
                 cd /tmp
 
@@ -227,7 +229,7 @@ jobs:
 
                 cd Python-3.11.15
 
-                ./configure --enable-optimizations
+                ./configure
                 make -j$(nproc)
                 sudo make altinstall
 
@@ -342,7 +344,7 @@ jobs:
       #       '
       - name: Ensure Python 3.11 is installed on all Linux nodes
         run: |
-          ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging' \
+          ansible 'bastion_staging:app_staging_1:app_staging_2:prometheus_staging:grafana_staging:router_staging' \
             -i ansible/inventory/staging/hosts.yml \
             -m ansible.builtin.raw \
             -a '
@@ -353,7 +355,7 @@ jobs:
                 echo "Python 3.11 not found - installing Python 3.11.15"
 
                 sudo yum groupinstall "Development Tools" -y
-                sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
+                sudo yum install gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
 
                 cd /tmp
 
@@ -367,7 +369,7 @@ jobs:
 
                 cd Python-3.11.15
 
-                ./configure --enable-optimizations
+                ./configure
                 make -j$(nproc)
                 sudo make altinstall
 
