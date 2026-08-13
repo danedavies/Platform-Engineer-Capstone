@@ -40,7 +40,6 @@ module "peering" {
   router_cidr = module.vpc_router.vpc_cidr
 }
 
-
 module "ec2" {
   source = "./ec2"
 
@@ -77,6 +76,11 @@ module "vpn" {
 
   project_name = var.project_name
 }
+
+########################
+# APP VPC NACL
+########################
+
 resource "aws_network_acl" "app_acl" {
   vpc_id = module.vpc_app.vpc_id
 
@@ -91,36 +95,14 @@ resource "aws_network_acl" "app_acl" {
   }
 }
 
-# Inbound SSH from OBS
-resource "aws_network_acl_rule" "app_inbound_ssh_from_obs" {
+# Inbound ephemeral from OBS (return traffic when APP initiates to OBS)
+resource "aws_network_acl_rule" "app_inbound_ephemeral_from_obs" {
   network_acl_id = aws_network_acl.app_acl.id
   rule_number    = 100
   egress         = false
   protocol       = "tcp"
   rule_action    = "allow"
   cidr_block     = module.vpc_obs.vpc_cidr
-  from_port      = 1024
-  to_port        = 65535
-}
-
-resource "aws_network_acl_rule" "app_inbound_ssh_intra_vpc" {
-  network_acl_id = aws_network_acl.app_acl.id
-  rule_number    = 140
-  egress         = false
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = module.vpc_app.vpc_cidr
-  from_port      = 22
-  to_port        = 22
-}
-
-resource "aws_network_acl_rule" "app_inbound_ephemeral_intra_vpc" {
-  network_acl_id = aws_network_acl.app_acl.id
-  rule_number    = 150
-  egress         = false
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = module.vpc_app.vpc_cidr
   from_port      = 1024
   to_port        = 65535
 }
@@ -149,10 +131,34 @@ resource "aws_network_acl_rule" "app_inbound_ssh_from_ci" {
   to_port        = 22
 }
 
+# Inbound SSH within APP VPC (bastion -> private hosts)
+resource "aws_network_acl_rule" "app_inbound_ssh_intra_vpc" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 130
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 22
+  to_port        = 22
+}
+
+# Inbound ephemeral within APP VPC
+resource "aws_network_acl_rule" "app_inbound_ephemeral_intra_vpc" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 140
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 1024
+  to_port        = 65535
+}
+
 # Outbound ephemeral return traffic to CI runner
 resource "aws_network_acl_rule" "app_outbound_ephemeral_to_ci" {
   network_acl_id = aws_network_acl.app_acl.id
-  rule_number    = 130
+  rule_number    = 200
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
@@ -161,10 +167,10 @@ resource "aws_network_acl_rule" "app_outbound_ephemeral_to_ci" {
   to_port        = 65535
 }
 
-# Outbound SSH within APP VPC (bastion -> app_staging private hosts)
+# Outbound SSH within APP VPC (bastion -> app private hosts)
 resource "aws_network_acl_rule" "app_outbound_ssh_intra_vpc" {
   network_acl_id = aws_network_acl.app_acl.id
-  rule_number    = 140
+  rule_number    = 210
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
@@ -173,9 +179,10 @@ resource "aws_network_acl_rule" "app_outbound_ssh_intra_vpc" {
   to_port        = 22
 }
 
+# Outbound ephemeral within APP VPC
 resource "aws_network_acl_rule" "app_outbound_ephemeral_intra_vpc" {
   network_acl_id = aws_network_acl.app_acl.id
-  rule_number    = 150
+  rule_number    = 220
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
@@ -184,9 +191,10 @@ resource "aws_network_acl_rule" "app_outbound_ephemeral_intra_vpc" {
   to_port        = 65535
 }
 
+# Outbound HTTPS to internet (e.g., package repos)
 resource "aws_network_acl_rule" "app_outbound_https" {
   network_acl_id = aws_network_acl.app_acl.id
-  rule_number    = 160
+  rule_number    = 230
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
@@ -195,22 +203,46 @@ resource "aws_network_acl_rule" "app_outbound_https" {
   to_port        = 443
 }
 
-# Outbound SSH to OBS
+# Outbound SSH to OBS (bastion -> Prometheus/Grafana hosts via SSH)
 resource "aws_network_acl_rule" "app_outbound_ssh_to_obs" {
   network_acl_id = aws_network_acl.app_acl.id
-  rule_number    = 100
+  rule_number    = 240
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
   cidr_block     = module.vpc_obs.vpc_cidr
-  from_port      = 1024
-  to_port        = 65535
+  from_port      = 22
+  to_port        = 22
+}
+
+# Outbound HTTP to Grafana (port 3000) in OBS
+resource "aws_network_acl_rule" "app_outbound_http_grafana_to_obs" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 250
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_obs.vpc_cidr
+  from_port      = 3000
+  to_port        = 3000
+}
+
+# Outbound HTTP to Prometheus (port 9090) in OBS
+resource "aws_network_acl_rule" "app_outbound_http_prometheus_to_obs" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 260
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_obs.vpc_cidr
+  from_port      = 9090
+  to_port        = 9090
 }
 
 # Outbound SSH to ROUTER
 resource "aws_network_acl_rule" "app_outbound_ssh_to_router" {
   network_acl_id = aws_network_acl.app_acl.id
-  rule_number    = 110
+  rule_number    = 270
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
@@ -218,6 +250,11 @@ resource "aws_network_acl_rule" "app_outbound_ssh_to_router" {
   from_port      = 22
   to_port        = 22
 }
+
+########################
+# OBS VPC NACL
+########################
+
 resource "aws_network_acl" "obs_acl" {
   vpc_id = module.vpc_obs.vpc_id
 
@@ -231,7 +268,7 @@ resource "aws_network_acl" "obs_acl" {
   }
 }
 
-# Inbound SSH from APP
+# Inbound SSH from APP (bastion -> OBS hosts)
 resource "aws_network_acl_rule" "obs_inbound_ssh_from_app" {
   network_acl_id = aws_network_acl.obs_acl.id
   rule_number    = 100
@@ -243,17 +280,58 @@ resource "aws_network_acl_rule" "obs_inbound_ssh_from_app" {
   to_port        = 22
 }
 
-# Outbound SSH to APP
-resource "aws_network_acl_rule" "obs_outbound_ssh_to_app" {
+# Inbound Grafana HTTP from APP (port 3000)
+resource "aws_network_acl_rule" "obs_inbound_http_grafana_from_app" {
   network_acl_id = aws_network_acl.obs_acl.id
-  rule_number    = 100
+  rule_number    = 110
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 3000
+  to_port        = 3000
+}
+
+# Inbound Prometheus HTTP from APP (port 9090)
+resource "aws_network_acl_rule" "obs_inbound_http_prometheus_from_app" {
+  network_acl_id = aws_network_acl.obs_acl.id
+  rule_number    = 120
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 9090
+  to_port        = 9090
+}
+
+# Inbound ephemeral from APP (return traffic)
+resource "aws_network_acl_rule" "obs_inbound_ephemeral_from_app" {
+  network_acl_id = aws_network_acl.obs_acl.id
+  rule_number    = 130
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 1024
+  to_port        = 65535
+}
+
+# Outbound ephemeral to APP (return traffic)
+resource "aws_network_acl_rule" "obs_outbound_ephemeral_to_app" {
+  network_acl_id = aws_network_acl.obs_acl.id
+  rule_number    = 200
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
   cidr_block     = module.vpc_app.vpc_cidr
-  from_port      = 21024
+  from_port      = 1024
   to_port        = 65535
 }
+
+########################
+# ROUTER VPC NACL
+########################
+
 resource "aws_network_acl" "router_acl" {
   vpc_id = module.vpc_router.vpc_id
 
@@ -278,10 +356,22 @@ resource "aws_network_acl_rule" "router_inbound_ssh_from_app" {
   to_port        = 22
 }
 
+# Inbound ephemeral from APP (return traffic)
+resource "aws_network_acl_rule" "router_inbound_ephemeral_from_app" {
+  network_acl_id = aws_network_acl.router_acl.id
+  rule_number    = 110
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 1024
+  to_port        = 65535
+}
+
 # Outbound SSH to APP
 resource "aws_network_acl_rule" "router_outbound_ssh_to_app" {
   network_acl_id = aws_network_acl.router_acl.id
-  rule_number    = 100
+  rule_number    = 200
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
@@ -289,6 +379,23 @@ resource "aws_network_acl_rule" "router_outbound_ssh_to_app" {
   from_port      = 22
   to_port        = 22
 }
+
+# Outbound ephemeral to APP (return traffic)
+resource "aws_network_acl_rule" "router_outbound_ephemeral_to_app" {
+  network_acl_id = aws_network_acl.router_acl.id
+  rule_number    = 210
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 1024
+  to_port        = 65535
+}
+
+########################
+# IAM MODULE
+########################
+
 module "iam" {
   source      = "./iam"
   user_name   = "platform-capstone"
