@@ -66,7 +66,7 @@ Contains:
 Router
 Public Subnet
 Internet Gateway
-Route Table
+Route Table 
 
 The router serves as the public entry point for the application and distributes HTTP requests between the two private application servers.
 
