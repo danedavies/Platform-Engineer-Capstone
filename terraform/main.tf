@@ -99,8 +99,30 @@ resource "aws_network_acl_rule" "app_inbound_ssh_from_obs" {
   protocol       = "tcp"
   rule_action    = "allow"
   cidr_block     = module.vpc_obs.vpc_cidr
+  from_port      = 1024
+  to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "app_inbound_ssh_intra_vpc" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 140
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
   from_port      = 22
   to_port        = 22
+}
+
+resource "aws_network_acl_rule" "app_inbound_ephemeral_intra_vpc" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 150
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 1024
+  to_port        = 65535
 }
 
 # Inbound SSH from ROUTER
@@ -139,6 +161,40 @@ resource "aws_network_acl_rule" "app_outbound_ephemeral_to_ci" {
   to_port        = 65535
 }
 
+# Outbound SSH within APP VPC (bastion -> app_staging private hosts)
+resource "aws_network_acl_rule" "app_outbound_ssh_intra_vpc" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 140
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 22
+  to_port        = 22
+}
+
+resource "aws_network_acl_rule" "app_outbound_ephemeral_intra_vpc" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 150
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = module.vpc_app.vpc_cidr
+  from_port      = 1024
+  to_port        = 65535
+}
+
+resource "aws_network_acl_rule" "app_outbound_https" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 160
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 443
+  to_port        = 443
+}
+
 # Outbound SSH to OBS
 resource "aws_network_acl_rule" "app_outbound_ssh_to_obs" {
   network_acl_id = aws_network_acl.app_acl.id
@@ -147,8 +203,8 @@ resource "aws_network_acl_rule" "app_outbound_ssh_to_obs" {
   protocol       = "tcp"
   rule_action    = "allow"
   cidr_block     = module.vpc_obs.vpc_cidr
-  from_port      = 22
-  to_port        = 22
+  from_port      = 1024
+  to_port        = 65535
 }
 
 # Outbound SSH to ROUTER
@@ -195,8 +251,8 @@ resource "aws_network_acl_rule" "obs_outbound_ssh_to_app" {
   protocol       = "tcp"
   rule_action    = "allow"
   cidr_block     = module.vpc_app.vpc_cidr
-  from_port      = 22
-  to_port        = 22
+  from_port      = 21024
+  to_port        = 65535
 }
 resource "aws_network_acl" "router_acl" {
   vpc_id = module.vpc_router.vpc_id
