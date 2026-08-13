@@ -115,6 +115,30 @@ resource "aws_network_acl_rule" "app_inbound_ssh_from_router" {
   to_port        = 22
 }
 
+# Inbound SSH from CI
+resource "aws_network_acl_rule" "app_inbound_ssh_from_ci" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 120
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 22
+  to_port        = 22
+}
+
+# Outbound ephemeral return traffic to CI runner
+resource "aws_network_acl_rule" "app_outbound_ephemeral_to_ci" {
+  network_acl_id = aws_network_acl.app_acl.id
+  rule_number    = 130
+  egress         = true
+  protocol       = "tcp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 1024
+  to_port        = 65535
+}
+
 # Outbound SSH to OBS
 resource "aws_network_acl_rule" "app_outbound_ssh_to_obs" {
   network_acl_id = aws_network_acl.app_acl.id
