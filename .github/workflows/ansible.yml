@@ -83,7 +83,7 @@ jobs:
 
       - name: Configure SSH known hosts
         run: |
-          ssh-keyscan -H 98.92.138.251 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 32.197.184.41 >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       # - name: Ensure Python 3.11 is installed on bastion
@@ -302,7 +302,7 @@ jobs:
         
       - name: Configure SSH known hosts
         run: |
-          ssh-keyscan -H 98.92.138.251 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 32.197.184.41 >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
           chmod 600 ~/.ssh/capstonekey.pem
