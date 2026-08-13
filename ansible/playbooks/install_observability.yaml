@@ -12,7 +12,6 @@
 
 - name: Install node_exporter on app instances
   hosts: tag_Role_bastion:tag_Role_private_app
-  
   gather_facts: true
   become: true
   roles:
