@@ -6,12 +6,12 @@
   roles:
     - node_exporter
 
-# - name: Configure Prometheus
-#   hosts: tag_Role_prometheus
-#   become: true
+- name: Configure Prometheus
+  hosts: tag_Role_prometheus
+  become: true
 
-  # roles:
-  #   - prometheus
+  roles:
+    - prometheus
 
 - name: Configure Grafana
   hosts: tag_Role_grafana

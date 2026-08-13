@@ -17,12 +17,12 @@
   roles:
     - node_exporter
 
-# - name: Install Prometheus
-#   hosts: tag_Role_prometheus
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - prometheus
+- name: Install Prometheus
+  hosts: tag_Role_prometheus
+  gather_facts: true
+  become: true
+  roles:
+    - prometheus
 
 - name: Install Grafana
   hosts: tag_Role_grafana
