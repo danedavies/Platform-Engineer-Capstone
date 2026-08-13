@@ -77,3 +77,31 @@ module "vpn" {
 
   project_name = var.project_name
 }
+module "network_acl" {
+  source = "./modules/network_acl"
+
+  project_name = var.project_name
+
+  app_vpc_id       = module.vpc_app.vpc_id
+  obs_vpc_id       = module.vpc_obs.vpc_id
+  router_vpc_id    = module.vpc_router.vpc_id
+
+  app_subnet_ids   = [
+    module.vpc_app.public_subnet_id,
+    module.vpc_app.private_1_id,
+    module.vpc_app.private_2_id
+  ]
+
+  obs_subnet_ids   = [
+    module.vpc_obs.public_subnet_id,
+    module.vpc_obs.private_subnet_id
+  ]
+
+  router_subnet_ids = [
+    module.vpc_router.public_subnet_id
+  ]
+
+  app_cidr    = module.vpc_app.vpc_cidr
+  obs_cidr    = module.vpc_obs.vpc_cidr
+  router_cidr = module.vpc_router.vpc_cidr
+}
