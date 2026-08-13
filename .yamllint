@@ -15,6 +15,8 @@ rules:
   empty-lines: disable
 
   new-line-at-end-of-file: disable
+
+  
   indentation:
     spaces: 2
     indent-sequences: true
