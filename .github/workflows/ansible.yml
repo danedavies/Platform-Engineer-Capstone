@@ -370,9 +370,9 @@ jobs:
 
       #           cd /tmp
 
-                if [ ! -f Python-3.12.13.tgz ]; then
-                  wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
-                fi
+                # if [ ! -f Python-3.12.13.tgz ]; then
+                #   wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+                # fi
 
       #           if [ ! -d Python-3.12.13 ]; then
       #             tar -xzf Python-3.12.13.tgz
