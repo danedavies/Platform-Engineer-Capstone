@@ -306,6 +306,11 @@ jobs:
           chmod 600 ~/.ssh/known_hosts
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
           chmod 600 ~/.ssh/capstonekey.pem
+
+      - name: Test SSH and Python
+        run: |
+          ssh -i ~/.ssh/capstonekey.pem ec2-user@32.197.184.41 
+          "/usr/bin/python3 --version"
           
       # - name: Ensure Python 3.11 is installed on bastion
       #   run: |
