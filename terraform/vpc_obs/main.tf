@@ -110,7 +110,7 @@ resource "aws_nat_gateway" "obs_nat" {
   depends_on = [aws_internet_gateway.igw]
 }
 
-resource "aws_route_table" "private_rt" {
+resource "aws_route_table" "pro_private_rt" {
   vpc_id = aws_vpc.obs.id
 
   route {
