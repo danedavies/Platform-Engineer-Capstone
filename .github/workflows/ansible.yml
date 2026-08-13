@@ -227,7 +227,7 @@ jobs:
 
                 cd Python-3.11.15
 
-                ./configure --enable-optimizations
+                ./configure
                 make -j$(nproc)
                 sudo make altinstall
 
@@ -367,7 +367,7 @@ jobs:
 
                 cd Python-3.11.15
 
-                ./configure --enable-optimizations
+                ./configure
                 make -j$(nproc)
                 sudo make altinstall
 
