@@ -119,6 +119,6 @@ resource "aws_route_table" "private_rt" {
   }
 
   tags = {
-    Name = "${var.project_name}-obs-private-rt"
+    Name = "${var.project_name}-obs-pro-private-rt"
   }
 }
