@@ -12,11 +12,11 @@
 
 ## 📌 Overview
 
-This project demonstrates an end-to-end Network as Code and infrastructure automation workflow using AWS, Terraform, Ansible, Docker, Prometheus, Grafana, Git, GitHub, Linux and GitHub Actions.
+This project demonstrates an end-to-end Network as Code and infrastructure automation workflow using AWS, Terraform, Ansible, Git, GitHub, Linux and GitHub Actions.
 
-Terraform is used to provision and manage the AWS networking infrastructure, while Ansible configures the hosts and deploys application and monitoring services.
+Terraform is used to provision and manage the AWS networking infrastructure, while Ansible configures the hosts.
 
-The environment includes multiple VPCs, VPC peering, public and private subnets, routing, security groups, a NAT gateway, Linux EC2 instances, containerized applications, and monitoring.
+The environment includes multiple VPCs, VPC peering, public and private subnets, routing, security groups, a NAT gateway, and Linux EC2 instances.
 
 ---
 
@@ -35,9 +35,8 @@ Contains:
 
 Bastion host
 Two private application servers
-Public and private subnets
+4 Public and 3 Private subnets
 NAT Gateway
-Dockerized application containers
 
 **VPC 2 - Observability**
 
@@ -45,14 +44,6 @@ CIDR:
 ```
 10.1.0.0/16
 ```
-
-Contains:
-
-Prometheus server
-Grafana server
-Prometheus collects infrastructure metrics from node_exporter.
-
-Grafana uses Prometheus as its datasource and provides visualization through the Infrastructure dashboard.
 
 **VPC 3 - Router**
 
@@ -66,9 +57,7 @@ Contains:
 Router
 Public Subnet
 Internet Gateway
-Route Table 
-
-The router serves as the public entry point for the application and distributes HTTP requests between the two private application servers.
+Route Table
 
 ---
 
@@ -78,13 +67,12 @@ Terraform is responsible for provisioning and managing the AWS infrastructure.
 Terraform manages:
 
 - Three VPCs
-- Public and private subnets
+- 5 Public and 3 private subnets
 - Internet Gateway
-- NAT Gateway
 - NAT Gateway
 - Route tables
 - Route table associations
-- VPC peering connections
+- 2 VPC peering connections
 - Security groups
 - EC2 instances
 - IAM role
