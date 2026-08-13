@@ -7,8 +7,3 @@ variable "project_name" {
   type    = string
   default = "platform-capstone"
 }
-
-variable "ami" {
-  type    = string
-  default = data.aws_ami.al2023.id
-}
