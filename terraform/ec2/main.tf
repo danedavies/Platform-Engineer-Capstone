@@ -295,6 +295,7 @@ resource "aws_instance" "router_placeholder" {
     Role    = "router"
   }
 }
+/*
 resource "aws_instance" "router" {
   ami           = "ami-0279549f721af0ad1"
   instance_type = "c5.large"
@@ -311,3 +312,4 @@ resource "aws_instance" "router" {
     Role    = "router"
   }
 }
+*/
