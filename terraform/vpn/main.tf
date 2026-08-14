@@ -1,3 +1,4 @@
+/*
 resource "aws_vpn_gateway" "app" {
   vpc_id          = var.app_vpc_id
   amazon_side_asn = var.aws_bgp_asn
@@ -34,3 +35,4 @@ resource "aws_vpn_gateway_route_propagation" "app" {
   vpn_gateway_id = aws_vpn_gateway.app.id
   route_table_id = var.app_private_route_table_id
 }
+*/
