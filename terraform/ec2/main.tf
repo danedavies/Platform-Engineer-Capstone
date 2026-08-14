@@ -274,13 +274,20 @@ resource "aws_instance" "prometheus" {
 # Router Placeholder (ROUTER VPC)
 ############################################
 resource "aws_instance" "router_placeholder" {
-  ami                    = var.ami
-  instance_type          = "t3.medium"
+  ami                    = ami-0279549f721af0ad1
+  instance_type          = "c5.large"
   subnet_id              = var.router_public_subnet
   vpc_security_group_ids = [aws_security_group.router.id]
   key_name = "capstonekey"
   associate_public_ip_address = true
   source_dest_check           = false
+  
+  root_block_device {
+    volume_size = 16
+    volume_type = "gp3"
+  }
+  
+  user_data = file("${path.module}/templates/router-day0.txt")
 
   tags = {
     Name    = "${var.project_name}-router"
