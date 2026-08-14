@@ -1,3 +1,4 @@
+/*
 variable "app_vpc_id" {
   description = "ID of the App VPC"
   type        = string
@@ -33,3 +34,4 @@ variable "app_private_route_table_id" {
   description = "Private route table ID for the App VPC"
   type = string
 }
+*/
