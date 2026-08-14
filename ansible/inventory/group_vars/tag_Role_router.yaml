@@ -7,4 +7,4 @@ ansible_user: "{{ router_admin_user | default('ec2-user') }}"
 # Add Vaulting for vars below
 ansible_become: true
 ansible_become_method: enable
-ansible_become_password: "{{ vault_router_enable_password | default(omit) }}"
+ansible_become_password: Capstone123 #"{{ vault_router_enable_password | default(omit) }}"
