@@ -6,8 +6,7 @@ ip domain name capstone.local
 crypto key generate rsa modulus 2048
 ip ssh version 2
 !
-username ec2-user privilege 15 secret Capstone123
-# enable secret 
+username ec2-user privilege 15 password Capstone123
 !
 line vty 0 4
  login local
