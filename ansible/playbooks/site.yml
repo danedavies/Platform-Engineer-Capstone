@@ -1,19 +1,19 @@
 ---
-#- name: Configure application servers
+# - name: Configure application servers
 #  hosts: tag_Role_private_app
 #  become: true
 
 #  roles:
 #    - node_exporter
 
-#- name: Configure Prometheus
+# - name: Configure Prometheus
 #  hosts: tag_Role_prometheus
 #  become: true
 
 #  roles:
 #    - prometheus
 
-#- name: Configure Grafana
+# - name: Configure Grafana
 #  hosts: tag_Role_grafana
 #  become: true
 
