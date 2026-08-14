@@ -63,7 +63,7 @@ module "ec2" {
   # Router VPC subnet
   router_public_subnet = module.vpc_router.public_subnet_id
 }
-
+/*
 module "vpn" {
   source = "./vpn"
 
@@ -76,7 +76,7 @@ module "vpn" {
 
   project_name = var.project_name
 }
-
+*/
 ########################
 # APP VPC NACL
 ########################
