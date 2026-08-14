@@ -282,7 +282,7 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: validate
+    needs: [validate, dry-run]
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment || 'staging' }}

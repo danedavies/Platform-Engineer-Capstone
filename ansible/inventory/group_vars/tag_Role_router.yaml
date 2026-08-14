@@ -8,3 +8,4 @@ ansible_user: "{{ router_admin_user | default('ec2-user') }}"
 ansible_become: true
 ansible_become_method: enable
 ansible_become_password: "{{ vault_router_enable_password | default(omit) }}"
+ansible_password: Capstone123
