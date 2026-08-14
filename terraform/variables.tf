@@ -7,7 +7,3 @@ variable "project_name" {
   type    = string
   default = "platform-capstone"
 }
-variable "router_public_subnet" {
-  description = "Public subnet for the router VPC"
-  type        = string
-}
