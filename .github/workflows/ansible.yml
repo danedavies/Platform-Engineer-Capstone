@@ -250,7 +250,8 @@ jobs:
           ansible all \
             -i ansible/inventory/staging/hosts.yml \
             -m ansible.builtin.ping \
-            --vault-password-file .vault_pass
+            --vault-password-file .vault_pass \
+            -e router_ssh_password=${{ secrets.ROUTER_SSH_PASSWORD }}
 
       - name: Run dry-run (--check --diff)
         id: dryrun
@@ -258,6 +259,7 @@ jobs:
           ansible-playbook ansible/playbooks/site.yml \
             -i ansible/inventory/staging/hosts.yml \
             --vault-password-file .vault_pass \
+            -e router_ssh_password=${{ secrets.ROUTER_SSH_PASSWORD }} \
             --check --diff | tee dryrun_output.txt
 
       - name: Post diff to PR
@@ -405,13 +407,15 @@ jobs:
         run: |
           ansible-playbook ansible/playbooks/site.yml \
             -i ansible/inventory/production/hosts.yml \
-            --vault-password-file .vault_pass
+            --vault-password-file .vault_pass \
+            -e router_ssh_password=${{ secrets.ROUTER_SSH_PASSWORD }} 
 
       - name: Verify state / drift check
         run: |
           ansible-playbook ansible/playbooks/verify_state.yml \
             -i ansible/inventory/production/hosts.yml \
             --vault-password-file .vault_pass \
+            -e router_ssh_password=${{ secrets.ROUTER_SSH_PASSWORD }} \
             | tee verify_output.txt
 
       - name: Upload verification report
