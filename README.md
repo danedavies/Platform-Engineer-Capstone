@@ -31,7 +31,7 @@ CIDR:
 10.0.0.0/16
 ```
 
-Contains:
+Contains: 
 
 Bastion host
 Two private application servers
