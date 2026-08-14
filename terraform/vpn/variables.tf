@@ -18,11 +18,6 @@ variable "project_name" {
 # Customer Gatway
 ###################
 
-variable "router_public_ip" {
-  description = "Public IP of the sopftware router"
-  type = string
-}
-
 variable "router_bgp_asn" {
   description = "BGP ASN on the software router"
   type = number
