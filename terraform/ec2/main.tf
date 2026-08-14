@@ -288,3 +288,19 @@ resource "aws_instance" "router_placeholder" {
     Role    = "router"
   }
 }
+resource "aws_instance" "router" {
+  ami           = "ami-0279549f721af0ad1"
+  instance_type = "c5.large"
+
+  subnet_id              = var.router_public_subnet
+  security_groups = [aws_security_group.bastion_sg.id]
+
+  associate_public_ip_address = false
+  source_dest_check           = false
+
+  tags = {
+    Name    = "Cisco-C8K Router"
+    Project = "capstone"
+    Role    = "router"
+  }
+}
