@@ -8,7 +8,7 @@ resource "aws_security_group" "router" {
     from_port       = 22
     to_port         = 22
     protocol        = "tcp"
-    security_groups = [aws_security_group.bastion_sg.id]
+    security_groups = [module.bastion.bastion_sg_id]
   }
 
   ingress {
@@ -16,7 +16,7 @@ resource "aws_security_group" "router" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+    cidr_blocks = ["${module.bastion.bastion_public_ip}/32"]
   }
 
   egress {
