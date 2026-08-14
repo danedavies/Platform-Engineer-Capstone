@@ -103,22 +103,22 @@ jobs:
       #           echo "Python 3.11 is already installed"
       #           /usr/local/bin/python3.11 --version
       #         else
-      #           echo "Python 3.11 not found - installing Python 3.11.15"
+      #           echo "Python 3.11 not found - installing Python 3.12.13"
         
       #           sudo yum groupinstall "Development Tools" -y
       #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
         
       #           cd /tmp
         
-      #           if [ ! -f Python-3.11.15.tgz ]; then
-      #             wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+      #           if [ ! -f Python-3.12.13.tgz ]; then
+      #             wget https://www.python.org/ftp/python/3.12.13/Python-3.12.13.tgz
       #           fi
         
-      #           if [ ! -d Python-3.11.15 ]; then
-      #             tar -xzf Python-3.11.15.tgz
+      #           if [ ! -d Python-3.12.13 ]; then
+      #             tar -xzf Python-3.12.13.tgz
       #           fi
         
-      #           cd Python-3.11.15
+      #           cd Python-3.12.13
         
       #           ./configure --enable-optimizations
       #           make -j$(nproc)
@@ -138,22 +138,22 @@ jobs:
       #           echo "Python 3.11 is already installed"
       #           /usr/local/bin/python3.11 --version
       #         else
-      #           echo "Python 3.11 not found - installing Python 3.11.15"
+      #           echo "Python 3.11 not found - installing Python 3.12.13"
           
       #           sudo yum groupinstall "Development Tools" -y
       #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
           
       #           cd /tmp
           
-      #           if [ ! -f Python-3.11.15.tgz ]; then
-      #             wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+      #           if [ ! -f Python-3.12.13.tgz ]; then
+      #             wget https://www.python.org/ftp/python/3.12.13/Python-3.12.13.tgz
       #           fi
           
-      #           if [ ! -d Python-3.11.15 ]; then
-      #             tar -xzf Python-3.11.15.tgz
+      #           if [ ! -d Python-3.12.13 ]; then
+      #             tar -xzf Python-3.12.13.tgz
       #           fi
           
-      #           cd Python-3.11.15
+      #           cd Python-3.12.13
           
       #           ./configure --enable-optimizations
       #           make -j$(nproc)
@@ -176,9 +176,9 @@ jobs:
       #           sudo yum groupinstall "Development Tools" -y
       #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
       #           cd /tmp
-      #           [ -f Python-3.11.15.tgz ] || wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
-      #           [ -d Python-3.11.15 ] || tar -xzf Python-3.11.15.tgz
-      #           cd Python-3.11.15
+      #           [ -f Python-3.12.13.tgz ] || wget https://www.python.org/ftp/python/3.12.13/Python-3.12.13.tgz
+      #           [ -d Python-3.12.13 ] || tar -xzf Python-3.12.13.tgz
+      #           cd Python-3.12.13
       #           ./configure --enable-optimizations
       #           make -j$(nproc)
       #           sudo make altinstall
@@ -198,9 +198,9 @@ jobs:
       #           sudo yum groupinstall "Development Tools" -y
       #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
       #           cd /tmp
-      #           [ -f Python-3.11.15.tgz ] || wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
-      #           [ -d Python-3.11.15 ] || tar -xzf Python-3.11.15.tgz
-      #           cd Python-3.11.15
+      #           [ -f Python-3.12.13.tgz ] || wget https://www.python.org/ftp/python/3.12.13/Python-3.12.13.tgz
+      #           [ -d Python-3.12.13 ] || tar -xzf Python-3.12.13.tgz
+      #           cd Python-3.12.13
       #           ./configure --enable-optimizations
       #           make -j$(nproc)
       #           sudo make altinstall
@@ -330,22 +330,22 @@ jobs:
       #           echo "Python 3.11 is already installed"
       #           /usr/local/bin/python3.11 --version
       #         else
-      #           echo "Python 3.11 not found - installing Python 3.11.15"
+      #           echo "Python 3.11 not found - installing Python 3.12.13"
           
       #           sudo yum groupinstall "Development Tools" -y
       #           sudo yum install openssl-devel bzip2-devel libffi-devel zlib-devel wget tar -y
           
       #           cd /tmp
           
-      #           if [ ! -f Python-3.11.15.tgz ]; then
-      #             wget https://www.python.org/ftp/python/3.11.15/Python-3.11.15.tgz
+      #           if [ ! -f Python-3.12.13.tgz ]; then
+      #             wget https://www.python.org/ftp/python/3.12.13/Python-3.12.13.tgz
       #           fi
           
-      #           if [ ! -d Python-3.11.15 ]; then
-      #             tar -xzf Python-3.11.15.tgz
+      #           if [ ! -d Python-3.12.13 ]; then
+      #             tar -xzf Python-3.12.13.tgz
       #           fi
           
-      #           cd Python-3.11.15
+      #           cd Python-3.12.13
           
       #           ./configure --enable-optimizations
       #           make -j$(nproc)
