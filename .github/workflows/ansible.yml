@@ -83,7 +83,7 @@ jobs:
 
       - name: Configure SSH known hosts
         run: |
-          ssh-keyscan -H 3.228.2.144 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 3.222.116.224 >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       # - name: Test SSH and Python
@@ -309,7 +309,7 @@ jobs:
         
       - name: Configure SSH known hosts
         run: |
-          ssh-keyscan -H 3.228.2.144 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 3.222.116.224 >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
           echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/capstonekey.pem
           chmod 600 ~/.ssh/capstonekey.pem
