@@ -273,8 +273,8 @@ resource "aws_instance" "prometheus" {
 ############################################
 # Router Placeholder (ROUTER VPC)
 ############################################
-resource "aws_instance" "router_placeholder" {
-  ami                    = ami-0279549f721af0ad1
+resource "aws_instance" "router" {
+  ami                    = "ami-0279549f721af0ad1"
   instance_type          = "c5.large"
   subnet_id              = var.router_public_subnet
   vpc_security_group_ids = [aws_security_group.router.id]
