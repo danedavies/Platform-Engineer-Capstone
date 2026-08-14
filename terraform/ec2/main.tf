@@ -287,7 +287,7 @@ resource "aws_instance" "router_placeholder" {
     volume_type = "gp3"
   }
   
-  user_data = file("${path.module}/templates/router-day0.txt")
+#  user_data = file("${path.module}/templates/router-day0.txt")
 
   tags = {
     Name    = "${var.project_name}-router"
