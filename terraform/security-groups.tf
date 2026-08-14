@@ -1,21 +1,21 @@
 resource "aws_security_group" "router" {
   name        = "${var.project_name}-router-sg"
   description = "Allow SSH and routing traffic"
-  vpc_id      = module.vpc_router.vpc_id   # ← THIS IS THE FIX
+  vpc_id      = module.vpc_router.vpc_id # ← THIS IS THE FIX
 
   ingress {
-    description = "SSH from bastion"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    description     = "SSH from bastion"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
     security_groups = [aws_security_group.bastion_sg.id]
   }
 
   ingress {
     description = "SSH from bastion Public IP"
-    from_port = 22 
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
   }
 
